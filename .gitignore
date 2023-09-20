@@ -17,6 +17,11 @@
 /BigProject/[Bb]uilds/
 /BigProject/[Ll]ogs/
 /BigProject/[Mm]emoryCaptures/
+/BigProject/.idea/.idea.BigProject/.idea
+/BigProject/.editorconfig
+/BigProject/.vsconfig
+/BigProject/mono_crash.0.0.json
+
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
