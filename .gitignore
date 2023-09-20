@@ -9,9 +9,14 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+
 /BigProject/[Ll]ibrary/
 /BigProject/[Tt]emp/
 /BigProject/[Ll]ogs/
+/BigProject/[Bb]uild/
+/BigProject/[Bb]uilds/
+/BigProject/[Ll]ogs/
+/BigProject/[Mm]emoryCaptures/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
