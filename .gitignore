@@ -22,6 +22,10 @@
 /BigProject/.vsconfig
 /BigProject/mono_crash.0.0.json
 
+/hooks
+/lfs
+/lfs/objects
+
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
