@@ -1,3 +1,6 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d00de245827efc8035206aa248cc21e7ec11194ed8c9704b78bd363ede0d5bed
-size 135
+* filter=lfs diff=lfs merge=lfs -text
+README.md -filter
+.gitattributes -filter
+BigProject/Assets/Scripts/* -filter
+BigProject/Assets/Resources/Data/* -filter
+
