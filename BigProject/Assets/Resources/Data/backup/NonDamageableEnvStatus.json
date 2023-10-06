@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d6b06b0ccaadb5337a03005f23f3d56733b4bd67fc417dee5d8ec7f06b081679
-size 289
+{
+    "envStats": [
+        {
+            "id": "Spike",
+            "attack": 50
+        },
+        {
+            "id": "Fire",
+            "attack": 20
+        },
+        {
+            "id": "Turret",
+            "attack": 0
+        },
+	{
+	    "id":"Falling",
+	    "attack":20
+	}
+    ]
+}

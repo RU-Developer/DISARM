@@ -1,3 +1,88 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:473be02433ae779291a7c283cd09778ee7601e62e87525116ba34d87e74d1f24
-size 2077
+{
+    "icons": [
+        {
+            "id": "None",
+            "path": ""
+        },
+        {
+            "id": "boss",
+            "path": "sprites/MapIcon/boss"
+        },
+        {
+            "id": "teleport",
+            "path": "sprites/MapIcon/teleport"
+        },
+        {
+            "id": "latch",
+            "path": "sprites/MapIcon/latch"
+        },
+        {
+            "id": "save",
+            "path": "sprites/MapIcon/save"
+        },
+        {
+            "id": "path_lock",
+            "path": "sprites/MapIcon/path_lock"
+        },
+        {
+            "id": "path_open",
+            "path": "sprites/MapIcon/path_open"
+        },
+        {
+            "id": "path_templock",
+            "path": "sprites/MapIcon/path_templock"
+        },
+        {
+            "id": "ResearchScene_Room",
+            "path": "sprites/MapIcon/ResearchScene_Room"
+        },
+        {
+            "id": "ForestScene_Room",
+            "path": "sprites/MapIcon/ForestScene_Room"
+        },
+        {
+            "id": "current_room",
+            "path": "sprites/MapIcon/current_room"
+        },
+        {
+            "id": "UpgradeHp",
+            "path": "sprites/MapIcon/UpgradeHp"
+        },
+        {
+            "id": "DartGun",
+            "path": "sprites/Weapon/DartGun"
+        },
+        {
+            "id": "Dive",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "GrabLedge",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "WallJump",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "Twins",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "Parry",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "firmWare",
+            "path": "sprites/MapIcon/firmWare"
+        },
+        {
+            "id": "weapon",
+            "path": "sprites/MapIcon/weapon"
+        },
+        {
+            "id": "upgradeHp",
+            "path": "sprites/MapIcon/UpgradeHp"
+        }
+    ]
+}

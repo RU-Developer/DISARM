@@ -1,3 +1,174 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7f6a2d8094286d2f66a87c3748596bef25003daaf9f2bfa0603f2c74880ff67f
-size 4576
+{
+    "iconDatas": [
+        {
+            "id": "ResearchScene_Section1",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": true,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section2",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section3",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section4",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section5",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": true,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section6",
+            "boss": false,
+            "teleport": true,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section7",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section8",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": true,
+            "weapon": false
+        },
+        {
+            "id": "ResearchScene_Section9",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section1",
+            "boss": false,
+            "teleport": true,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section2",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section3",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section4",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section5",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section6",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": true
+        },
+        {
+            "id": "ForestScene_Section7",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": false,
+            "firmWare": false,
+            "weapon": false
+        },
+        {
+            "id": "ForestScene_Section8",
+            "boss": false,
+            "teleport": false,
+            "latch": false,
+            "save": false,
+            "upgradeHp": true,
+            "firmWare": true,
+            "weapon": false
+        }
+    ]
+}

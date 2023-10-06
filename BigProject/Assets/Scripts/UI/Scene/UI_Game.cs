@@ -1,3 +1,71 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:c64bf9440d262f7c687aa3fc6bf1a58945a8862b28aab0c686db19f6c7b962d5
-size 1720
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+/**
+ * 게임 진행 중에 보이는 정보들
+ */
+public class UI_Game : UI_Scene
+{
+    enum Images
+    {
+        WeaponIcon
+    }
+
+    enum GameObjects
+    {
+        UI_Game_Hp,
+        DiveSkillCoolTimer,
+        ParrySkillCoolTimer
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        Bind<Image>(typeof(Images));
+        Bind<GameObject>(typeof(GameObjects));
+
+        Managers.Input.AddKeyAction(OpenMenu);
+
+
+        Image weapon = GetImage((int)Images.WeaponIcon);
+        switch (Managers.Data.PlayerStatusDict["saved"].weapon)
+        {
+            case "None":
+                break;
+
+            case "DartGun":
+                weapon.sprite = Managers.Resource.Load<Sprite>(Managers.Data.IconDict["DartGun"].path);
+                break;
+        }
+
+        // dive parry 쿨타임 설정
+        GetObject((int)GameObjects.DiveSkillCoolTimer).GetComponent<UI_Cool_Time_Slider>().SetSkill("dive");
+        GetObject((int)GameObjects.ParrySkillCoolTimer).GetComponent<UI_Cool_Time_Slider>().SetSkill("parry");
+    }
+
+    private void OpenMenu()
+    {
+        if (!Input.GetKeyDown(KeyCode.Escape))
+            return;
+
+        if (Managers.Pause.IsPause)
+            Managers.Pause.Play();
+        else
+        {
+            Managers.Pause.Pause();
+            Managers.UI.CloseSceneUI<UI_Game>();
+            Managers.UI.ShowSceneUI<UI_Game_Menu>();
+        }
+    }
+
+    public override void Clear()
+    {
+        base.Clear();
+        GetObject((int)GameObjects.UI_Game_Hp)?
+            .GetComponent<UI_Game_Hp>()?.Clear();
+
+        Managers.Input.RemoveKeyAction(OpenMenu);
+    }
+}

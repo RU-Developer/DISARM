@@ -1,3 +1,25 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:68950c3a5c2c9811bf0c5bfd52a034c978624335768ac61cac006423688efc27
-size 694
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class HiddenPlace : MonoBehaviour
+{
+    private Tilemap sprite;
+    private void OnEnable()
+    {
+        sprite = GetComponent<Tilemap>();   
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player" && sprite.color.a>0)
+        {
+            sprite.color = new Color(255, 255, 255, sprite.color.a - 1);
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player" && sprite.color.a<255)
+        {
+            sprite.color = new Color(255, 255, 255, sprite.color.a + 1);
+        }
+    }
+}

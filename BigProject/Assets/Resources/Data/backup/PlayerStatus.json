@@ -1,3 +1,30 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:9eb63d12e4f124c96705f99259efa40bd67480c77049adf8bd1f0fd17cca2b3b
-size 674
+{
+    "playerStats": [
+        {
+            "id": "base",
+            "hp": 300,
+            "maxHp": 300,
+            "attack": 100,
+            "money": 1200,
+            "memory": 0,
+            "maxMemory": 100,
+            "weapon": "None",
+            "scene": "ResearchScene",
+            "x": 0.0,
+            "y": 0.0
+        },
+        {
+            "id": "saved",
+            "hp": 300,
+            "maxHp": 300,
+            "attack": 100,
+            "money": 1200,
+            "memory": 0,
+            "maxMemory": 100,
+            "weapon": "None",
+            "scene": "ResearchScene",
+            "x": -3.90487,
+            "y": -12.07497
+        }
+    ]
+}

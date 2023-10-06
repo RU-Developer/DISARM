@@ -1,3 +1,48 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:727d9c02a15310d30343bf690e71224d11286d5970448a146cb1c754300f209a
-size 1218
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Game_Menu_Status : UI_Scene
+{
+    enum GameObjects
+    {
+        CollectionMenuHandler,
+        MenuHandler,
+    }
+
+    private void QuitMenu()
+    {
+        if (!Input.GetKeyDown(KeyCode.Escape))
+            return;
+
+        Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
+        Managers.UI.ShowSceneUI<UI_Game>();
+        Managers.Pause.Play();
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        Bind<GameObject>(typeof(GameObjects));
+        BindEvent(GetObject((int)GameObjects.CollectionMenuHandler),
+            evt =>
+            {
+                Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
+                Managers.UI.ShowSceneUI<UI_Game_Menu_Collection>();
+            });
+        BindEvent(GetObject((int)GameObjects.MenuHandler),
+            evt =>
+            {
+                Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
+                Managers.UI.ShowSceneUI<UI_Game_Menu>();
+            });
+
+        Managers.Input.AddUIKeyAction(QuitMenu);
+    }
+
+    public override void Clear()
+    {
+        base.Clear();
+        Managers.Input.RemoveUIKeyAction(QuitMenu);
+    }
+}

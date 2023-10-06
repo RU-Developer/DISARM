@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6fbd50720b7538778413907388d6337a0fad1004125185f6f7fca78554466144
-size 605
+using Cinemachine;
+using UnityEngine;
+
+public class RoundCameraPos : CinemachineExtension
+{
+    protected override void PostPipelineStageCallback(CinemachineVirtualCameraBase vcam, CinemachineCore.Stage stage, ref CameraState state, float deltaTime)
+    {
+        if(stage == CinemachineCore.Stage.Body)
+        {
+            Vector3 pos = state.FinalPosition;
+            Vector3 pos2 = new Vector3(Round(pos.x), Round(pos.y), pos.z);
+            state.PositionCorrection += pos2 - pos;
+        }
+    }
+
+    float Round(float x)
+    {
+        return Mathf.Round(x * 32) / 32;
+    }
+}

@@ -1,3 +1,35 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:264fdc956d55ad0c4ae4650242759a802e57d6678994f1e0a51d5778b1d75c52
-size 1597
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MeleeAttack : MonoBehaviour
+{
+    private NonDamageableEnvStatus status;
+    private bool isReflect = false;
+    public float dir = 0;
+    public float playerDir = 0;
+    private GameObject projectile;
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponent<Bullet>() != null && !isReflect)
+        {
+            projectile = Managers.Resource.Instantiate("Bullet");
+            isReflect = true;
+            Bullet bullet = collision.GetComponent<Bullet>();
+            float rotation = bullet.angle;
+            projectile.transform.position = collision.gameObject.transform.position;
+            projectile.transform.rotation = Quaternion.AngleAxis(rotation + 180 + 30 * dir * playerDir, Vector3.forward);
+            projectile.GetComponent<Bullet>().isEnemy = false;
+            Managers.Resource.Destroy(collision.gameObject);
+        }else if(collision.GetComponent<Fire>() !=null && !isReflect)
+        {
+            projectile = Managers.Resource.Instantiate("Fire");
+            projectile.transform.position = collision.gameObject.transform.position;
+            isReflect = true;
+            Vector2 vector = collision.GetComponent<Rigidbody2D>().velocity * -1;
+            projectile.GetComponent<Rigidbody2D>().velocity = new Vector2(vector.x+10*playerDir,vector.y+10*dir);
+            projectile.GetComponent<Fire>().isEnemy = false;
+            Managers.Resource.Destroy(collision.gameObject);
+        }
+    }
+}

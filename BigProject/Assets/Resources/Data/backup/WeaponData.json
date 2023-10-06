@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5a3c377e02624a4101ecd63429b714b6afcc415d6b5706595c024983389f06c3
-size 255
+﻿{
+    "weapons": [
+        {
+            "id": "DartGun",
+            "description": "다트를 발사하여 벽에 꽃을 수 있는 총입니다.",
+            "name": "다트총",
+            "attack": 20,
+            "own": false
+        }
+    ]
+}

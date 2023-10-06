@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:37990111ccece62ee45a97f54b3497c6dc1cf233e134f8b3f89005e94bcf0b60
-size 502
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class TempSave : MonoBehaviour
+{
+    public FallingSection fs;
+    private void OnEnable()
+    {
+        this.GetComponent<Tilemap>().color = new Color(0, 0, 0, 0);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            fs.tempSave = collision.transform.position;
+        }
+    }
+}

@@ -1,3 +1,88 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6de8d1007bf5f8c6e9777362c2bc0cfab18d7fd194bddbb5c732763e4c8c71df
-size 2350
+{
+    "scripts": [
+        {
+            "id": "1",
+            "name": "RGB쨩",
+            "script": {
+                "content": "changed text",
+                "link": ""
+            },
+            "selections": [
+                {
+                    "content": "1번 스크립트 1번 선택지",
+                    "link": "1-1"
+                },
+                {
+                    "content": "1번 스크립트 2번 선택지",
+                    "link": "1-2"
+                },
+                {
+                    "content": "1번 스크립트 3번 선택지",
+                    "link": "1-3"
+                },
+                {
+                    "content": "아이템 상점",
+                    "link": "//OpenShop"
+                },
+                {
+                    "content": ".... 그냥 다음 스크립트로",
+                    "link": "2"
+                }
+            ]
+        },
+        {
+            "id": "1-1",
+            "name": "RGB쨩",
+            "script": {
+                "content": "1번 선택지를 선택하였습니다.",
+                "link": ""
+            },
+            "selections": []
+        },
+        {
+            "id": "1-2",
+            "name": "RGB쨩",
+            "script": {
+                "content": "2번 선택지를 선택하였습니다.",
+                "link": ""
+            },
+            "selections": []
+        },
+        {
+            "id": "1-3",
+            "name": "RGB쨩",
+            "script": {
+                "content": "3번 선택지를 선택하였습니다.",
+                "link": ""
+            },
+            "selections": []
+        },
+        {
+            "id": "1-4",
+            "name": "RGB쨩",
+            "script": {
+                "content": "4번 선택지를 선택하였습니다.",
+                "link": ""
+            },
+            "selections": []
+        },
+        {
+            "id": "2",
+            "name": "RGB쨩",
+            "script": {
+                "content": "2번째 스크립트",
+                "link": "3"
+            },
+            "selections": []
+        },
+        {
+            "id": "3",
+            "name": "RGB쨩",
+            "script": {
+                "content": "3번째 스크립트(마지막)",
+                "link": ""
+            },
+            "selections": []
+        }
+    ]
+}

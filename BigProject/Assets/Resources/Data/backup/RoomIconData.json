@@ -1,3 +1,58 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:bab708e99a477368c8093f0f2c17e3ec9044d0217299f2845252167b6b2b8977
-size 1202
+﻿{
+    "iconDatas": [
+        {
+            "id": "ResearchScene_Section1"
+        },
+        {
+            "id": "ResearchScene_Section2"
+        },
+        {
+            "id": "ResearchScene_Section3",
+            "save": true,
+            "teleport": true
+        },
+        {
+            "id": "ResearchScene_Section4",
+            "teleport": true
+        },
+        {
+            "id": "ResearchScene_Section5"
+        },
+        {
+            "id": "ResearchScene_Section6"
+        },
+        {
+            "id": "ResearchScene_Section7",
+            "upgradeHp": true,
+            "firmWare": true,
+            "weapon": true
+        },
+	{
+            "id": "ResearchScene_Section8"
+        },
+	{
+            "id": "ResearchScene_Section9"
+        },
+        {
+            "id": "ForestScene_Section1"
+        },
+        {
+            "id": "ForestScene_Section2"
+        },
+        {
+            "id": "ForestScene_Section3"
+        },
+        {
+            "id": "ForestScene_Section4"
+        },
+        {
+            "id": "ForestScene_Section5"
+        },
+        {
+            "id": "ForestScene_Section6"
+        },
+        {
+            "id": "ForestScene_Section7"
+        }
+    ]
+}

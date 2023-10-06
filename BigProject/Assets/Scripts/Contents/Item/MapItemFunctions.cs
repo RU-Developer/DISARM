@@ -1,3 +1,61 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:aa41c1983abbb0a3df831d05958f41ab265404137fae0240f8b697a359e10716
-size 1124
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+
+/**
+ * MapItem의 id(prefab이름과도 동일하게)에 맞춰서 함수명을 지으면 자동으로 아이템 획득시 호출됩니다.
+ */
+public class MapItemFunctions
+{
+    public static void Invoke(string func)
+    {
+        typeof(MapItemFunctions)
+            .GetMethod(func, BindingFlags.Static | BindingFlags.NonPublic)
+            .Invoke(null, null);
+    }
+
+    #region Upgrade
+
+    private static void IncreaseHp()
+    {
+        PlayerStatus status = Managers.Game.GetPlayer().GetComponent<PlayerStatus>();
+        status.UpdateMaxHp(100);
+        status.UpdateHp(100);
+    }
+
+    #endregion
+
+    #region Weapons
+
+    private static void DartGun()
+    {
+        Managers.Data.WeaponDict["DartGun"].own = true;
+    }
+
+    #endregion
+
+    #region FirmWare
+
+    private static void Dive()
+    {
+    }
+
+    private static void Parry()
+    {
+    }
+
+    private static void GrabLedge()
+    {
+    }
+
+    private static void WallJump()
+    {
+    }
+
+    private static void Twins()
+    {
+    }
+
+    #endregion
+}

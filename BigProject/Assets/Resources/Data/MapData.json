@@ -1,3 +1,52 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ebcb2dc8a497f0dbc6496cdf3e625391c6068639d47de1cddb09adb029e94ba4
-size 1638
+{
+    "maps": [
+        {
+            "scene": "ResearchScene",
+            "roomIds": [
+                "ResearchScene_Section1",
+                "ResearchScene_Section2",
+                "ResearchScene_Section3",
+                "ResearchScene_Section4",
+                "ResearchScene_Section5",
+                "ResearchScene_Section6",
+                "ResearchScene_Section7",
+                "ResearchScene_Section8",
+                "ResearchScene_Section9"
+            ],
+            "pathIds": [
+                "ResearchScene_Path1",
+                "ResearchScene_Path2",
+                "ResearchScene_Path3",
+                "ResearchScene_Path4",
+                "ResearchScene_Path5",
+                "ResearchScene_Path6",
+                "ResearchScene_Path7",
+                "ResearchScene_Path8"
+            ]
+        },
+        {
+            "scene": "ForestScene",
+            "roomIds": [
+                "ForestScene_Section1",
+                "ForestScene_Section2",
+                "ForestScene_Section3",
+                "ForestScene_Section4",
+                "ForestScene_Section5",
+                "ForestScene_Section6",
+                "ForestScene_Section7",
+                "ForestScene_Section8",
+                "ForestScene_Section9"
+            ],
+            "pathIds": [
+                "ForestScene_Path1",
+                "ForestScene_Path2",
+                "ForestScene_Path3",
+                "ForestScene_Path4",
+                "ForestScene_Path5",
+                "ForestScene_Path6",
+                "ForestScene_Path7",
+                "ForestScene_Path8"
+            ]
+        }
+    ]
+}

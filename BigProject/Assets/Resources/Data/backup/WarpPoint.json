@@ -1,3 +1,18 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:36543dc5a157b2f59d3313dc75f46bbf4f5661f35d8d385f59124f595c53ef2f
-size 403
+{
+    "warpPoints": [
+        {
+            "id": "warp1",
+            "scene": "ResearchScene",
+            "link": "warp2",
+            "x": -14.514869689941407,
+            "y": 19.90389060974121
+        },
+        {
+            "id": "warp2",
+            "scene": "ForestScene",
+            "link": "warp1",
+            "x": -14.014869689941407,
+            "y": 22.513891220092775
+        }
+    ]
+}

@@ -1,3 +1,68 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:33b516c6b9523767272ef4974ad4fa2f11b36e86272c5bbe87fa966e89cde366
-size 1815
+{
+    "mapItems": [
+        {
+            "id": "IncreaseHp1",
+            "itemId": "IncreaseHp",
+            "scene": "ResearchScene",
+            "x": -11.394869804382325,
+            "y": 5.113891124725342,
+            "consume": false
+        },
+        {
+            "id": "IncreaseHp2",
+            "itemId": "IncreaseHp",
+            "scene": "ForestScene",
+            "x": -7.25486946105957,
+            "y": 0.673891007900238,
+            "consume": false
+        },
+        {
+            "id": "Twins",
+            "itemId": "Twins",
+            "scene": "ResearchScene",
+            "x": -4.834869384765625,
+            "y": -11.466109275817871,
+            "consume": false
+        },
+        {
+            "id": "WallJump",
+            "itemId": "WallJump",
+            "scene": "ResearchScene",
+            "x": -6.554869651794434,
+            "y": -11.426109313964844,
+            "consume": false
+        },
+        {
+            "id": "GrabLedge",
+            "itemId": "GrabLedge",
+            "scene": "ForestScene",
+            "x": -9.464869499206543,
+            "y": -5.076108932495117,
+            "consume": false
+        },
+        {
+            "id": "Parry",
+            "itemId": "Parry",
+            "scene": "ResearchScene",
+            "x": 5.114335536956787,
+            "y": 0.35132211446762087,
+            "consume": false
+        },
+        {
+            "id": "Dive",
+            "itemId": "Dive",
+            "scene": "ForestScene",
+            "x": 19.760000228881837,
+            "y": 11.720000267028809,
+            "consume": false
+        },
+        {
+            "id": "DartGun",
+            "itemId": "DartGun",
+            "scene": "ForestScene",
+            "x": -67.2648696899414,
+            "y": -10.77610969543457,
+            "consume": false
+        }
+    ]
+}

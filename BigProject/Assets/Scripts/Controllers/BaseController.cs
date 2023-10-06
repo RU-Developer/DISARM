@@ -1,3 +1,38 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0fcbc3f0d31dad0c1cc059911af1acaf7603c02dd915de4325207f4f96e57ce7
-size 864
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/**
+ * GameManager가 관리하는 자원들은 이 클래스를 상속받게 됩니다.
+ */
+public class BaseController : MonoBehaviour
+{
+    public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
+
+    private void Awake()
+    {
+        Init();
+    }
+
+    public virtual void Init()
+    {
+
+    }
+
+    public virtual void OnSpawn()
+    {
+
+    }
+
+    public virtual void OnDeSpawn()
+    {
+        Despawnable[] arr = gameObject.GetComponents<Despawnable>();
+        for (int i = 0; i < arr.Length; i++)
+            arr[i].Despawn();
+
+        List<Despawnable> despawnables = gameObject.FindAllChild<Despawnable>();
+        if (despawnables != null)
+            foreach (Despawnable item in despawnables)
+                item.Despawn();
+    }
+}

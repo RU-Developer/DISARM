@@ -1,3 +1,20 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0931ef4bbcb1fbc580fb95d0ae00a61be4b8e19934f7b3fac594f8db404949d0
-size 576
+{
+    "shopItems": [
+        {
+            "id": "Energy Extraction Converter",
+            "name": "에너지 추출 변환기",
+            "description": "몬스터를 처치한 이후 일정량의 HP를 회복시키는 모듈",
+            "cost": 600,
+            "memory": 10,
+            "imageSrc": ""
+        },
+        {
+            "id": "Jump Expander",
+            "name": "점프 확장기",
+            "description": "점프 횟수를 1회 추가해주는 모듈",
+            "cost": 600,
+            "memory": 10,
+            "imageSrc": ""
+        }
+    ]
+}

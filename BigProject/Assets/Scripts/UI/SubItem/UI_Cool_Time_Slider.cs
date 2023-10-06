@@ -1,3 +1,37 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:426727d679c988c3e1ad6c15566d0e975b85b61d8df8a48d292b72455f18a4c8
-size 769
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class UI_Cool_Time_Slider : UI_Base
+{
+    private Slider _slider;
+    private string _skillName;
+
+    public override void Init()
+    {
+        if (string.IsNullOrEmpty(_skillName))
+            return;
+
+        _slider = GetComponent<Slider>();
+    }
+
+    public void SetSkill(string skillName)
+    {
+        _skillName = skillName;
+    }
+
+    private void Update()
+    {
+        if (_slider == null)
+        {
+            Init();
+            return;
+        }
+
+        float maxCoolTime = Managers.Data.CoolTimeDict[_skillName].coolTime;
+        float remain = Managers.Skill.RemainCoolTime(_skillName);
+
+        _slider.value = remain / maxCoolTime;
+    }
+}

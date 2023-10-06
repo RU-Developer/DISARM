@@ -1,6 +1,6 @@
 * filter=lfs diff=lfs merge=lfs -text
 README.md -filter
 .gitattributes -filter
-BigProject/Assets/Scripts/* -filter
-BigProject/Assets/Resources/Data/* -filter
+BigProject/Assets/Scripts/** -filter
+BigProject/Assets/Resources/Data/** -filter
 

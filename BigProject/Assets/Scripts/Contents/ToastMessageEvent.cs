@@ -1,3 +1,29 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:56a38dd7db1ddb73ff5b8699670849f1b28b1ea4bcacce402df5e1f194d39598
-size 730
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ToastMessageEvent : MonoBehaviour
+{
+    public string message;
+
+    public bool isOn = false;
+
+    private float _eventDistance = 2.0f;
+
+    private void Update()
+    {
+        if (isOn)
+            return;
+
+        GameObject player = Managers.Game.GetPlayer();
+
+        float distance = Vector2.Distance(new Vector2(player.transform.position.x, player.transform.position.y),
+                new Vector2(transform.position.x, transform.position.y));
+
+        if (distance > _eventDistance)
+            return;
+
+        isOn = true;
+        Managers.UI.ShowPopupUI<UI_Toast_Message>().SetInfo(message, transform.position, this);
+    }
+}

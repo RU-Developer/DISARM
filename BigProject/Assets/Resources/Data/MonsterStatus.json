@@ -1,3 +1,44 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:445f233cbc35f1a579cc9654ae3270e6aa46f39090fd1879e13ce6457fff6ef2
-size 824
+{
+    "monsterStats": [
+        {
+            "id": "Slime",
+            "maxHp": 100,
+            "attack": 30
+        },
+        {
+            "id": "Fly",
+            "maxHp": 100,
+            "attack": 30
+        },
+        {
+            "id": "Flower",
+            "maxHp": 100,
+            "attack": 0
+        },
+        {
+            "id": "Crawler",
+            "maxHp": 20,
+            "attack": 30
+        },
+        {
+            "id": "Turret",
+            "maxHp": 20,
+            "attack": 0
+        },
+        {
+            "id": "Trapper",
+            "maxHp": 20,
+            "attack": 20
+        },
+        {
+            "id": "Security",
+            "maxHp": 50,
+            "attack": 30
+        },
+        {
+            "id": "Shooter",
+            "maxHp": 70,
+            "attack": 30
+        }
+    ]
+}

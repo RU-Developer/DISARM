@@ -1,3 +1,25 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b284f2fbf6aa2d8fe4e96ab22701e545dbb693047b5b864d741953bf22398776
-size 736
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public class FallingSection : MonoBehaviour
+{
+    public Vector2 tempSave;
+    NonDamageableEnvStatus status;
+    private void OnEnable()
+    {
+        status = GetComponent<NonDamageableEnvStatus>();
+        this.GetComponent<Tilemap>().color = new Color(0, 0, 0, 0);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Player")
+        {
+            collision.GetComponent<PlayerStatus>().OnDamaged(status);
+            collision.transform.position = tempSave;
+            collision.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        }
+    }
+
+}

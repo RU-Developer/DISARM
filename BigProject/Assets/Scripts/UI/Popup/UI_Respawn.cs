@@ -1,3 +1,41 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2bdb895f05a86df153e879eb32e6948d24f1d361db278ef0ccb52408d7f40527
-size 966
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Respawn : UI_Popup
+{
+    enum GameObjects
+    {
+        ButtonEventHandler
+    }
+
+    public override void Init()
+    {
+        base.Init();
+        Managers.Input.AddUIKeyAction(OnKeyBoard);
+        Bind<GameObject>(typeof(GameObjects));
+        BindEvent(GetObject((int)GameObjects.ButtonEventHandler), evt => Close());
+    }
+
+    private void OnKeyBoard()
+    {
+        if (Input.GetKeyDown(KeyCode.Return))
+            Close();
+    }
+
+    private void Close()
+    {
+        Managers.Pause.Play();
+        Managers.Input.RemoveUIKeyAction(OnKeyBoard);
+        ClosePopupUI();
+
+        Managers.Game.Despawn(Managers.Game.GetPlayer());
+        if (!Managers.Game.TEST)
+            Managers.Game.Respawn();
+        else
+        {
+            Managers.Game.SetPlayerSpawnPos(Managers.Game.DefaultPosition);
+            Managers.Game.EnterSceneSpawn();
+        }
+    }
+}

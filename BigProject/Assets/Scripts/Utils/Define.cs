@@ -1,3 +1,83 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:02cfefe2ebc8b86ce631f2c0c6ce021fddd5d485e3417a15e68ca00efdb0d053
-size 1837
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/**
+ * 여러가지 게임 내에서 정의할 데이터들입니다.
+ */
+public class Define
+{
+    public enum Weapon
+    {
+        None,
+        DartGun,
+    }
+
+    /**
+     * GameManager에서 관리하는 모든 GameObject들의 종류입니다.
+     * BaseController를 상속받으면 필드로 어떤 타입인지 구별할 수 있습니다.
+     */
+    public enum WorldObject
+    {
+        Unknown, //기본값
+
+        Player,
+        Monster,
+    }
+
+    /**
+     * 게임의 Layer 정보를 기록해둔 enum입니다.
+     */
+    public enum Layer
+    {
+        Player = 3,
+        Platform = 6,
+        Confiner = 7,
+        Spike = 8,
+        Dart = 9,
+    }
+
+    /**
+     * Scene 이름 정보입니다.
+     */
+    public enum Scene
+    {
+        Unknown, //기본값
+
+        ResearchScene,
+        ForestScene,
+        WarpTestScene, //Warp Test
+    }
+
+    /**
+     * 들려줄 소리의 종류입니다.
+     * 각 소리의 종류마다 AudioSource가 하나씩 배정됩니다.
+     */
+    public enum Sound
+    {
+        Bgm, //배경음악. 계속 반복해서 들림
+        Effect, //한번 들려주는 소리. 효과음
+
+        MaxCount //enum 타입의 저장된 갯수를 파악하기 위한 마지막 요소
+    }
+
+    /**
+     * UI를 마우스로 조작할 때 발생하는 이벤트들입니다.
+     */
+    public enum UIEvent
+    {
+        Click,
+        Drag,
+    }
+
+    /**
+     * UI가 아닌 인게임 마우스 조작입니다.
+     */
+    public enum MouseEvent
+    {
+        Press, //마우스를 누르고 있는 상태
+        PointerDown, //마우스를 눌렀을 때 발생
+        PointerUp, //마우스를 땠을 때 발생
+        Click, //마우스를 빠르게(0.2초) 눌렀다 땠을 때 발생
+    }
+}

@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cebb6f66b869d4ec1a83ae3f67a007ec4a79e46994c40c8dbb89e4f2889f1cdb
-size 301
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class UI_Popup : UI_Base
+{
+    public override void Init()
+    {
+        Managers.UI.SetCanvas(gameObject, true);
+    }
+
+    public virtual void ClosePopupUI()
+    {
+        Managers.UI.ClosePopupUI(this);
+    }
+}
