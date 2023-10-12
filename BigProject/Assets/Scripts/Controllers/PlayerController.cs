@@ -103,7 +103,6 @@ public class PlayerController : BaseController
     {
         //플레이어의 위,아래를 봤을 때 특정 animation을 동작시키는 코드
         headAngle = playerGun.angle;
-        Debug.Log(playerGun.angle);
         if (dir > 0)
         {
             if (playerGun.angle > 20)
@@ -151,7 +150,7 @@ public class PlayerController : BaseController
 
         //절벽을 잡을 수 있고, 마우스 각도가 캐릭터 위를 향할 때 작동
         //처음 위치와 끝 위치를 설정한다
-        if (isLedge && canGrabLedge && playerGun.angle > 20 && playerGun.angle < 160)
+        if (isLedge && canGrabLedge)
         {
             canGrabLedge = false;
             Vector2 ledgePosition = new Vector2(ledgeCheck.transform.position.x + (0.5f * dir), ledgeCheck.transform.position.y);
@@ -170,6 +169,7 @@ public class PlayerController : BaseController
             transform.position = climbBegunPosition;
             leftArm.SetActive(false);
             rightArm.SetActive(false);
+            head.SetActive(false);
             playerGun.canShoot = false;
             animator.speed = 1;
             animator.SetBool("isClimb", true);
@@ -187,6 +187,7 @@ public class PlayerController : BaseController
         playerGun.canShoot = true;
         leftArm.SetActive(true);
         rightArm.SetActive(true);
+        head.SetActive(true);
 
         Invoke("AllowLedgeGrab", 0.1f);
         transform.position = climbOverPosition;
@@ -357,6 +358,7 @@ public class PlayerController : BaseController
             StartCoroutine(forceX(dir * 0.1f, 0.6f));
             leftArm.SetActive(false);
             rightArm.SetActive(false);
+            head.SetActive(false);
             playerGun.canShoot = false;
             animator.SetBool("isRoll", true);
             headAnimator.SetBool("isRoll", true);
@@ -381,6 +383,7 @@ public class PlayerController : BaseController
         playerGun.canShoot = true;
         leftArm.SetActive(true);
         rightArm.SetActive(true);
+        head.SetActive(true);
         ((BoxCollider2D)coll).size = initSize;
         isRoll = false;
         canGrabLedge = true;
@@ -408,12 +411,12 @@ public class PlayerController : BaseController
             || Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, 0.6f, groundMask)
             || Physics2D.Raycast(new Vector2(transform.position.x + 0.2f, transform.position.y), Vector2.down, 0.6f, groundMask);
         isWallBehind = Physics2D.Raycast(transform.position, new Vector2(-dir, 0), 0.4f, platformMask);
-        isLedge = !Physics2D.Raycast(ledgeCheck.position, new Vector2(dir, 0), 0.5f, groundMask) && !isWallUp &&
-            Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), new Vector2(dir, 0), 0.4f, platformMask);
+        isLedge = !Physics2D.Raycast(ledgeCheck.position, Vector2.right*dir, 0.5f, groundMask) && !isWallUp &&
+            Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), Vector2.right*dir, 0.5f, platformMask);
         isWallFront = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), new Vector2(dir, 0), 0.4f, platformMask);
         isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.6f, platformMask);
         isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.6f, platformMask);
-        isWallUp = Physics2D.Raycast(transform.position, Vector2.up, 1f, groundMask);
+        isWallUp = Physics2D.Raycast(transform.position, Vector2.up, 0.8f, groundMask);
         isSlope = Physics2D.Raycast(transform.position, Vector2.down, 1f, slopeMask);
 
         //키보드 이벤트(스프라이트 떨림 현상 때문에 deltaTime을 쓰지 않고 여기에 정의함.)

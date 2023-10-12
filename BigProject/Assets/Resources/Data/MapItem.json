@@ -14,7 +14,7 @@
             "scene": "ForestScene",
             "x": -7.25486946105957,
             "y": 0.673891007900238,
-            "consume": false
+            "consume": true
         },
         {
             "id": "Twins",
@@ -22,7 +22,7 @@
             "scene": "ResearchScene",
             "x": -4.834869384765625,
             "y": -11.466109275817871,
-            "consume": false
+            "consume": true
         },
         {
             "id": "WallJump",
@@ -30,7 +30,7 @@
             "scene": "ResearchScene",
             "x": -6.554869651794434,
             "y": -11.426109313964844,
-            "consume": false
+            "consume": true
         },
         {
             "id": "GrabLedge",
@@ -38,7 +38,7 @@
             "scene": "ForestScene",
             "x": -9.464869499206543,
             "y": -5.076108932495117,
-            "consume": false
+            "consume": true
         },
         {
             "id": "Parry",
@@ -46,7 +46,7 @@
             "scene": "ResearchScene",
             "x": 5.114335536956787,
             "y": 0.35132211446762087,
-            "consume": false
+            "consume": true
         },
         {
             "id": "Dive",
@@ -54,7 +54,7 @@
             "scene": "ForestScene",
             "x": 19.760000228881837,
             "y": 11.720000267028809,
-            "consume": false
+            "consume": true
         },
         {
             "id": "DartGun",
@@ -62,7 +62,7 @@
             "scene": "ForestScene",
             "x": -67.2648696899414,
             "y": -10.77610969543457,
-            "consume": false
+            "consume": true
         }
     ]
 }

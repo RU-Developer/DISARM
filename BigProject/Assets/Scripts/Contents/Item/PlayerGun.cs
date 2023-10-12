@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class PlayerGun : Despawnable
 {
     //팔 부분 오브젝트
-    public GameObject leftArm, rightArm;
+    private GameObject leftArm, rightArm;
     //마우스 위치
     Vector2 mouse;
     //근접 공격이 가능한 시각(발동 시작시부터)
@@ -17,8 +17,8 @@ public class PlayerGun : Despawnable
     private bool isDefend = false;
     //팔의 방향(위=-1,아래=1)
     private float isAngleDown = 0;
-    //근접 공격 오브젝트
-    private GameObject attack;
+    //근접 공격 컴포넌트
+    private MeleeAttack melee;
     //팔 각도
     public float angle { private set; get; }
     //총이 사용 가능한지
@@ -35,6 +35,13 @@ public class PlayerGun : Despawnable
         canShoot = true;
         Managers.Input.AddKeyAction(OnKeyBoard);
         Managers.Input.AddMouseAction(OnMouseClick);
+
+        leftArm = gameObject.FindChild("leftArm");
+        rightArm = gameObject.FindChild("rightArm");
+
+        melee = leftArm.GetComponent<MeleeAttack>();
+
+
         status = GetComponent<PlayerStatus>();
         weapon = status.Weapon;
         status.AddWeaponChangedAction(OnWeaponChanged);
@@ -110,68 +117,7 @@ public class PlayerGun : Despawnable
         if (attackTime> 0 && !isDefend && Managers.Skill.CanUseSkill("parry"))
         {
             isDefend = true;
-            Attack(0.1f);
             Managers.Sound.Play("player_parry");
-            if (attack != null)
-            {
-                attack.GetComponent<MeleeAttack>().dir = 0;
-            }
-        }
-
-        if (attackTime > 0 && Managers.Skill.CanUseSkill("parry"))
-        {
-            
-            if (dir > 0 || Mathf.Sign(angle) == Mathf.Sign(meleeAngle))
-            {
-                if ((angle - meleeAngle) * dir > 45)
-                {
-                    Attack(0.2f);
-                    Managers.Sound.Play("player_parry2");
-                    if (attack != null)
-                    {
-                        attack.GetComponent<Animator>().SetBool("isUpward", true);
-                        attack.GetComponent<MeleeAttack>().dir = 1;
-                        Managers.Skill.UseSkill("parry");
-                    }
-                    
-                }
-                else if ((angle - meleeAngle) * dir < -45)
-                {
-                    Managers.Sound.Play("player_parry2");
-                    Attack(0.2f);
-                    if(attack != null)
-                    {
-                        attack.GetComponent<Animator>().SetBool("isDownward", true);
-                        attack.GetComponent<MeleeAttack>().dir = -1;
-                        Managers.Skill.UseSkill("parry");
-                    }
-                }
-            }
-            else
-            {
-                if (angle > 0)
-                {
-                    Attack(0.2f);
-                    if (attack != null)
-                    {
-                        Managers.Sound.Play("player_parry2");
-                        attack.GetComponent<Animator>().SetBool("isUpward", true);
-                        attack.GetComponent<MeleeAttack>().dir = 1;
-                        Managers.Skill.UseSkill("parry");
-                    }
-                }
-                else
-                {
-                    Attack(0.2f);
-                    if (attack != null)
-                    {
-                        Managers.Sound.Play("player_parry2");
-                        attack.GetComponent<Animator>().SetBool("isDownward", true);
-                        attack.GetComponent<MeleeAttack>().dir = -1;
-                        Managers.Skill.UseSkill("parry");
-                    }
-                }
-            }
         }
 
         if (Managers.Skill.CanUseSkill("parry"))
@@ -190,26 +136,6 @@ public class PlayerGun : Despawnable
             rightArm.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
         }
 
-    }
-
-    private void Attack(float remain)
-    {
-        if (attack != null && Managers.Skill.CanUseSkill("parry"))
-        {
-            Managers.Resource.Destroy(attack);
-        }
-        if (canShoot) 
-            attack = Managers.Resource.Instantiate("attack");
-            canShoot = false;
-        if(attack != null)
-        {
-            attack.GetComponent<MeleeAttack>().playerDir = dir;
-            attack.transform.position = new Vector2(transform.position.x + 0.4f * dir, transform.position.y -0.1f - 0.4f*isAngleDown);
-            attack.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-            Managers.Resource.Destroy(attack, remain);
-            
-        }
     }
 
     private void Fire()
