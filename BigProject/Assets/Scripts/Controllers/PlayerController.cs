@@ -25,7 +25,7 @@ public class PlayerController : BaseController
     //컴포넌트
     Rigidbody2D rigid;
     private GameObject head;
-    Animator animator,headAnimator;
+    Animator animator;
     Collider2D coll;
     PlayerGun playerGun;
     public GameObject leftArm, rightArm;
@@ -68,7 +68,6 @@ public class PlayerController : BaseController
         rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         head = this.gameObject.FindChild("head");
-        headAnimator = head.GetComponent<Animator>();
         coll = GetComponent<BoxCollider2D>();
         playerGun = GetComponent<PlayerGun>();
         groundParticle = this.gameObject.FindChild("run_particle").GetComponent<ParticleSystem>();
@@ -173,7 +172,6 @@ public class PlayerController : BaseController
             playerGun.canShoot = false;
             animator.speed = 1;
             animator.SetBool("isClimb", true);
-            headAnimator.SetBool("isClimb", true);
         }
     }
 
@@ -183,7 +181,6 @@ public class PlayerController : BaseController
         canClimbLedge = false;
         fixFlip = false;
         animator.SetBool("isClimb", false);
-        headAnimator.SetBool("isClimb", false);
         playerGun.canShoot = true;
         leftArm.SetActive(true);
         rightArm.SetActive(true);
@@ -212,7 +209,6 @@ public class PlayerController : BaseController
             xspeed = 0;
             
         animator.SetFloat("isRun", Mathf.Abs(horizontal));
-        headAnimator.SetFloat("isRun", Mathf.Abs(horizontal));
 
         //땅에서 이동할 때 GroundParticle 작동
         if (isGrounded && Input.GetAxis("Horizontal") != 0)
@@ -361,7 +357,6 @@ public class PlayerController : BaseController
             head.SetActive(false);
             playerGun.canShoot = false;
             animator.SetBool("isRoll", true);
-            headAnimator.SetBool("isRoll", true);
             animator.speed = 0;
         }
         if (isWallFront && isRoll)
@@ -379,7 +374,6 @@ public class PlayerController : BaseController
         //모든 상황을 원래대로 돌린다.
         //크기가 원래대로 돌아오는 부분이 있음
         animator.SetBool("isRoll", false);
-        headAnimator.SetBool("isRoll", false);
         playerGun.canShoot = true;
         leftArm.SetActive(true);
         rightArm.SetActive(true);
@@ -430,24 +424,18 @@ public class PlayerController : BaseController
             if (rigid.velocity.y > 0.2f)
             {
                 animator.SetBool("isFall", false);
-                headAnimator.SetBool("isFall", false);
                 animator.SetBool("isJump", true);
-                headAnimator.SetBool("isJump", true);
             }
             else if (rigid.velocity.y < -0.2f)
             {
                 animator.SetBool("isJump", false);
-                headAnimator.SetBool("isJump", false);
                 animator.SetBool("isFall", true);
-                headAnimator.SetBool("isFall", true);
             }
         }
         else
         {
             animator.SetBool("isFall", false);
-            headAnimator.SetBool("isFall", false);
             animator.SetBool("isJump", false);
-            headAnimator.SetBool("isJump", false);
         }
 
         
