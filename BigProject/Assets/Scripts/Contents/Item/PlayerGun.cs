@@ -161,7 +161,7 @@ public class PlayerGun : Despawnable
                     Managers.Sound.Play("dart_fire");
                     GameObject dart = Managers.Resource.Instantiate("dart");
                     dart.transform.position = new Vector2(transform.position.x, transform.position.y);
-                    dart.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+                    dart.transform.rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
                     dart.GetComponent<Dart>().status = status;
                     break;
             }

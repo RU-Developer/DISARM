@@ -270,7 +270,8 @@ public class PlayerController : BaseController
             rigid.velocity = new Vector2(rigid.velocity.x, 0);
             rigid.AddForce(Vector2.up * jumpForce * 0.9f, ForceMode2D.Impulse);
         }
-        else if (Input.GetKeyUp(KeyCode.Space) && rigid.velocity.y > 0)
+        
+        if (Input.GetKeyUp(KeyCode.Space) && rigid.velocity.y > 0)
         {
             Debug.Log("jump velocity / 2");
             rigid.velocity /= 2;

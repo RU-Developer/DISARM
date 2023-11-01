@@ -62,7 +62,7 @@
             "scene": "ForestScene",
             "x": -67.2648696899414,
             "y": -10.77610969543457,
-            "consume": true
+            "consume": false
         }
     ]
 }
