@@ -10,7 +10,7 @@ public class PlayerController : BaseController
     private float xspeed;
     //초기 gravityScale과 collider size
     private Vector3 initSize;
-    private float initGravity;
+    public float initGravity { private set; get; }
     //점프 한 횟수
     private int jumpCount = 0;
     //머리 오브젝트 각도
@@ -59,7 +59,7 @@ public class PlayerController : BaseController
         slopeMask = LayerMask.GetMask("Slope");
 
         //점프,벽 점프,구르기 크기
-        jumpForce = 12;
+        jumpForce = 13;
 
         //절벽 확인하는 gameObject저장
         ledgeCheck = gameObject.FindChild<Transform>("ledgeCheck");

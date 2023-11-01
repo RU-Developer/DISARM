@@ -21,6 +21,7 @@ public class PlayerGun : Despawnable
     private MeleeAttack melee;
     //팔 각도
     public float angle { private set; get; }
+    public float gunAngle { private set; get; }
     //총이 사용 가능한지
     [HideInInspector] public bool canShoot;
     
@@ -78,17 +79,8 @@ public class PlayerGun : Despawnable
             angle = 180-Mathf.Atan2(transform.position.y - mouse.y,
             Mathf.Abs(mouse.x - transform.position.x) * dir) * Mathf.Rad2Deg;
 
-
-
-
-        if (angle<=0 && angle >= -180)
-        {
-            isAngleDown = 1;
-        }
-        else
-        {
-            isAngleDown = -1;
-        }
+        gunAngle = Mathf.Atan2(mouse.y - transform.position.y,
+            Mathf.Abs(mouse.x - transform.position.x) * dir) * Mathf.Rad2Deg;
     }
 
     private void FixedUpdate()
@@ -161,7 +153,7 @@ public class PlayerGun : Despawnable
                     Managers.Sound.Play("dart_fire");
                     GameObject dart = Managers.Resource.Instantiate("dart");
                     dart.transform.position = new Vector2(transform.position.x, transform.position.y);
-                    dart.transform.rotation = Quaternion.AngleAxis(angle + 90, Vector3.forward);
+                    dart.transform.rotation = Quaternion.AngleAxis(gunAngle - 90, Vector3.forward);
                     dart.GetComponent<Dart>().status = status;
                     break;
             }

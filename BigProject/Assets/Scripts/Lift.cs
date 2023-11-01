@@ -5,10 +5,10 @@ using UnityEngine;
 public class Lift : MonoBehaviour
 {
     public GameObject up, down;
-    private bool upward,canLift;
+    private bool canLift;
+    public bool upward;
     public bool isLift { private set; get; }
     private PlayerController player;
-    private Animator animator;
     private void Start()
     {
         isLift = false;
@@ -16,63 +16,75 @@ public class Lift : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!upward && transform.position.y <= down.transform.position.y)
+        if (!isLift && player != null)
         {
-            if (player != null) player.isFix = false;
-            isLift = false;
-            upward = true;
+            if (player.transform.position.y < up.transform.position.y + 2 && player.transform.position.y > up.transform.position.y - 2)
+            {
+                upward = false;
+            }
+            if (player.transform.position.y < down.transform.position.y + 2 && player.transform.position.y > down.transform.position.y - 2)
+            {
+                upward = true;
+            }
         }
-        else if (upward && transform.position.y >= up.transform.position.y)
+        if(player != null)
         {
-            if (player != null) player.isFix = false;
-            isLift = false;
-            upward = false;
+            if (isLift)
+            {
+                if (upward)
+                {
+                    if (player.transform.position.y > up.transform.position.y)
+                    {
+                        transform.position = up.transform.position;
+                        player.transform.position = new Vector2(up.transform.position.x, up.transform.position.y + 0.8f);
+                        isLift = false;
+                    }
+                }
+                else
+                {
+                    if (player.transform.position.y < down.transform.position.y)
+                    {
+                        transform.position = down.transform.position;
+                        player.transform.position = new Vector2(down.transform.position.x, down.transform.position.y + 0.8f);
+                        isLift = false;
+                    }
+                }
+            }
         }
-        Lifting();
+            Lifting();
     }
     private void Lifting()
     {
         if (!isLift) return;
 
+        if (player != null)
+        {
+            player.transform.position = new Vector2(transform.position.x, transform.position.y + 0.5f);
+        }
         if (upward)
         {
             transform.Translate(Vector2.up * 5f * Time.deltaTime);
-            if (player != null)
-            {
-                player.transform.Translate(Vector2.up * 5f * Time.deltaTime);
-            }
         }
         else
         {
             transform.Translate(Vector2.down * 5f * Time.deltaTime);
-            if (player != null)
-            {
-                player.transform.Translate(Vector2.down * 5f * Time.deltaTime);
-            }
         }
-
-        
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>() != null && canLift)
+        if (collision.gameObject.GetComponent<PlayerController>() != null)
         {
             player = collision.gameObject.GetComponent<PlayerController>();
-            animator = collision.gameObject.GetComponent<Animator>();
-            if (!player.isFix)
+            if (canLift)
             {
-                if (upward&&animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.player_idle_lookup"))
+                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > player.transform.position.y+1 && upward)
                 {
-                    player.isFix = true;
-                    player.transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;
                     canLift = false;
                 }
-                if (!upward&&animator.GetCurrentAnimatorStateInfo(0).nameHash == Animator.StringToHash("Base Layer.player_idle_lookdown"))
+                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < player.transform.position.y-1 && !upward)
                 {
-                    player.isFix = true;
-                    player.transform.position = new Vector2(transform.position.x, transform.position.y + 0.2f);
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;
                     canLift = false;
@@ -82,9 +94,6 @@ public class Lift : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
-        {
-            canLift = true;
-        }
+        canLift = true;
     }
 }
