@@ -38,6 +38,43 @@ public class NetworkManager : MonoBehaviour
     private const int button2Mask = 0x00000020;
     private const int button2Bit = 5;
 
+    // 0000 0000 0000 0000 0000 0000 0001 0000
+    private const int button3Mask = 0x00000010;
+    private const int button3Bit = 4;
+
+    // 0000 0000 0000 0000 0000 0000 0000 1000
+    private const int button4Mask = 0x00000008;
+    private const int button4Bit = 3;
+
+    // 0000 0000 0000 0000 0000 0000 0000 0100
+    private const int button5Mask = 0x00000004;
+    private const int button5Bit = 2;
+
+    // 0000 0000 0000 0000 0000 0000 0000 0010
+    private const int button6Mask = 0x00000002;
+    private const int button6Bit = 1;
+
+    // 0000 0000 0000 0000 0000 0000 0000 0001
+    private const int button7Mask = 0x00000001;
+    private const int button7Bit = 0;
+
+    public bool IsConnected { get; private set; } = false;
+
+    public int Move { get; private set; }
+    public int X { get; private set; }
+    public int Y { get; private set; }
+    public int LeftButton { get; private set; }
+    public int RightButton { get; private set; }
+    public int Button1 { get; private set; }
+    public int Button2 { get; private set; }
+    public int Button3 { get; private set; }
+    public int Button4 { get; private set; }
+    public int Button5 { get; private set; }
+    public int Button6 { get; private set; }
+    public int Button7 { get; private set; }
+
+
+
     void Start()
     {
         // UDP 브로드캐스트 수신
@@ -55,6 +92,8 @@ public class NetworkManager : MonoBehaviour
                 tcpClient = new TcpClient();
                 tcpClient.Connect(remoteEP.Address, 23456); // 라즈베리파이의 IP 주소와 포트 번호
 
+                IsConnected = true;
+
                 // TCP로 데이터 수신
                 tcpThread = new Thread(() =>
                 {
@@ -67,18 +106,24 @@ public class NetworkManager : MonoBehaviour
                         {
                             int data = BitConverter.ToInt32(buffer, 0);
 
-                            int move = (moveMask & data) >> moveBit;
-                            int x = (xMask & data) >> xBit;
-                            int y = (yMask & data) >> yBit;
-                            int leftButton = (leftButtonMask & data) >> leftButtonBit;
-                            int rightButton = (rightbuttonMask & data) >> rightButtonBit;
-                            int btn1 = (button1Mask & data) >> button1Bit;
-                            int btn2 = (button2Mask & data) >> button2Bit;
+                            Move = (moveMask & data) >> moveBit;
+                            X = (xMask & data) >> xBit;
+                            Y = (yMask & data) >> yBit;
+                            LeftButton = (leftButtonMask & data) >> leftButtonBit;
+                            RightButton = (rightbuttonMask & data) >> rightButtonBit;
+                            Button1 = (button1Mask & data) >> button1Bit;
+                            Button2 = (button2Mask & data) >> button2Bit;
+                            Button3 = (button3Mask & data) >> button3Bit;
+                            Button4 = (button4Mask & data) >> button4Bit;
+                            Button5 = (button5Mask & data) >> button5Bit;
+                            Button6 = (button6Mask & data) >> button6Bit;
+                            Button7 = (button7Mask & data) >> button7Bit;
 
-                            Debug.Log($"move: {move}, x: {x}, y: {y}, leftButton: {leftButton}, rightButton: {rightButton}\nbutton1: {btn1}, button2: {btn2}");
+                            //Debug.Log($"move: {Move}, x: {X}, y: {Y}, leftButton: {LeftButton}, rightButton: {RightButton}\nbutton1: {Button1}, button2: {Button2}");
                         }
                         else
                         {
+                            IsConnected = false;
                             break;
                         }
                     }
@@ -92,6 +137,7 @@ public class NetworkManager : MonoBehaviour
     void OnDestroy()
     {
         // 스레드 종료
+        IsConnected = false;
         if (udpThread != null)
         {
             udpThread.Abort();

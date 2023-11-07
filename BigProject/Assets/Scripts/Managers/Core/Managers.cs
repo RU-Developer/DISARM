@@ -31,6 +31,7 @@ public class Managers : MonoBehaviour
 
     DataManager _data = new DataManager();
     InputManager _input = new InputManager();
+    NetworkManager _network;
     PauseManager _pause = new PauseManager();
     PoolManager _pool = new PoolManager();
     ResourceManager _resource = new ResourceManager();
@@ -40,6 +41,7 @@ public class Managers : MonoBehaviour
 
     public static DataManager Data { get { return Instance._data; } }
     public static InputManager Input { get { return Instance._input; } }
+    public static NetworkManager Network { get { return Instance._network; } }
     public static PauseManager Pause { get { return Instance._pause; } }
     public static PoolManager Pool { get { return Instance._pool; } }
     public static ResourceManager Resource { get { return Instance._resource; } }
@@ -70,10 +72,12 @@ public class Managers : MonoBehaviour
         {
             managers = new GameObject { name = "@Managers" };
             managers.AddComponent<Managers>();
+            managers.AddComponent<NetworkManager>();
         }
 
         DontDestroyOnLoad(managers);
         s_instance = managers.GetComponent<Managers>();
+        s_instance._network = managers.GetComponent<NetworkManager>();
         s_instance._data.Init();
         s_instance._sound.Init();
         s_instance._pool.Init();

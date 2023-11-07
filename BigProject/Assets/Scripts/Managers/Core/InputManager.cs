@@ -14,17 +14,159 @@ public class InputManager
     private Action<Define.MouseEvent> MouseAction = null;
     private Action UIKeyAction = null;
 
-    bool _pressed = false; //현재 마우스가 눌러지고 있는 상태인지 여부
-    float _pressedTime = 0;
+    private Action<Define.InputType> InputAction = null;
+
+    // 이전 마우스나 조이스틱 각도
+    public double LastAngle { get; private set; } = 0;
+    // 현재 마우스나 조이스틱 각도
+    public double CurrentAngle { get; private set; } = 0;
+    // 현재 조준 방향
+    public Define.InputDir CurrentAimDir { get; private set; } = Define.InputDir.Right;
+    // 현재 이동 방향
+    public Define.InputDir CurrentMoveDir { get; private set; } = Define.InputDir.Right;
+    // 조준 방향과 이동 방향은 Pause되지 않은 상태일 때만 변함
+
+    private GameObject _player;
+
+    private bool _leftMousePressed = false; //현재 마우스가 눌러지고 있는 상태인지 여부
+    private float _leftMousePressedTime = 0;
+
+    private bool _rightMousePressed = false;
+    private float _rightMousePressedTime = 0;
+
+    private bool _joyStickPressed = false;
+
+    // JoyStick 값을 위가 0인 360도 값으로 반환
+    // 조이스틱의 x, y값을 각도로 변환하는 함수
+    double JoystickToAngle(int x, int y)
+    {
+        LastAngle = CurrentAngle;
+        // x, y값이 500 ~ 550 사이면 조이스틱이 움직이지 않은 것으로 판단하고 이전 값을 반환
+        if (x >= 500 && x <= 550 && y >= 500 && y <= 550)
+        {
+            _joyStickPressed = true;
+            return CurrentAngle;
+        }
+
+        // x, y값을 double로 형변환하고, Math.Atan2 함수를 이용하여 라디안 값을 구함
+        double radian = Math.Atan2((double)y - 512, (double)x - 512);
+
+        // 라디안 값을 각도로 변환하고, 0 ~ 360 범위로 맞춤
+        CurrentAngle = radian * 180 / Math.PI;
+        if (CurrentAngle < 0)
+        {
+            CurrentAngle += 360;
+        }
+
+        // 각도를 반시계 방향으로 90도 회전시킴
+        CurrentAngle = (CurrentAngle + 270) % 360;
+        return CurrentAngle;
+    }
 
     public void OnUpdate()
     {
+        // 컨트롤러를 사용하는 경우 마우스를 이용한 조작 불가
+        if (Managers.Network.IsConnected)
+            JoystickToAngle(Managers.Network.X, Managers.Network.Y);
+        else // Mouse Screen과 Player의 위치를 통해 각도 구하기
+        {
+            _player = Managers.Game.GetPlayer();
+            if (_player != null)
+            {
+                LastAngle = CurrentAngle;
+                // 플레이어의 transform 컴포넌트를 저장
+                Transform playerTransform = _player.transform;
+
+                // 마우스의 스크린 상의 위치를 입력 받음
+                Vector3 mousePosition = Input.mousePosition;
+
+                // 마우스의 스크린 상의 위치를 월드 좌표로 변환함
+                Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                // 플레이어와 마우스 사이의 벡터를 구함
+                Vector3 playerToMouse = mouseWorldPosition - playerTransform.position;
+
+                // 플레이어와 마우스 사이의 벡터의 각도를 구함
+                CurrentAngle = Vector3.Angle(Vector3.up, playerToMouse);
+
+                // 플레이어와 마우스 사이의 벡터의 외적을 구함
+                Vector3 cross = Vector3.Cross(Vector3.up, playerToMouse);
+
+                // 외적의 z값이 음수면 각도를 반전시킴
+                if (cross.z < 0)
+                {
+                    CurrentAngle = -CurrentAngle;
+                }
+
+                // 각도를 0 ~ 360 범위로 맞춤
+                if (CurrentAngle < 0)
+                {
+                    CurrentAngle += 360;
+                }
+            }
+        } 
+
         //일시정지시
         if (Managers.Pause.IsPause)
         {
             //UI 키보드 이벤트는 일시정지된 상태에서도 진행
             if (Input.anyKey && UIKeyAction != null)
                 UIKeyAction.Invoke();
+
+            // UI 이벤트
+            if (InputAction == null)
+                return;
+
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                InputAction.Invoke(Define.InputType.Menu);
+                InputAction.Invoke(Define.InputType.Cancel);
+            }
+            
+            if (Input.GetKey(KeyCode.Return))
+                InputAction.Invoke(Define.InputType.Check);
+
+            if (Input.GetKey(KeyCode.W))
+                InputAction.Invoke(Define.InputType.Up);
+            if (Input.GetKey(KeyCode.D))
+                InputAction.Invoke(Define.InputType.Right);
+            if (Input.GetKey(KeyCode.S))
+                InputAction.Invoke(Define.InputType.Down);
+            if (Input.GetKey(KeyCode.A))
+                InputAction.Invoke(Define.InputType.Left);
+
+
+            if (Managers.Network.IsConnected)
+            {
+                if (Managers.Network.Button5 != 0)
+                    InputAction.Invoke(Define.InputType.Menu);
+                if (Managers.Network.Button3 != 0)
+                    InputAction.Invoke(Define.InputType.Check);
+                if (Managers.Network.Button2 != 0)
+                    InputAction.Invoke(Define.InputType.Cancel);
+
+                if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
+                {
+                    InputAction.Invoke(Define.InputType.Up);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
+                {
+                    InputAction.Invoke(Define.InputType.Right);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
+                {
+                    InputAction.Invoke(Define.InputType.Down);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
+                {
+                    InputAction.Invoke(Define.InputType.Left);
+                    _joyStickPressed = false;
+                }
+            }
+
             return;
         }
 
@@ -45,24 +187,146 @@ public class InputManager
         {
             if (Input.GetMouseButton(0)) //좌클릭
             {
-                if (!_pressed)
+                if (!_leftMousePressed)
                 {
                     MouseAction.Invoke(Define.MouseEvent.PointerDown);
-                    _pressedTime = Time.time;
+                    _leftMousePressedTime = Time.time;
                 }
                 MouseAction.Invoke(Define.MouseEvent.Press);
-                _pressed = true;
+                _leftMousePressed = true;
             }
             else
             {
-                if (_pressed) //클릭을 땠을 때
+                if (_leftMousePressed) //클릭을 땠을 때
                 {
-                    if (Time.time < _pressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
+                    if (Time.time < _leftMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
                         MouseAction.Invoke(Define.MouseEvent.Click);
                     MouseAction.Invoke(Define.MouseEvent.PointerUp);
                 }
-                _pressed = false;
-                _pressedTime = 0;
+                _leftMousePressed = false;
+                _leftMousePressedTime = 0;
+            }
+
+
+            if (InputAction == null)
+                return;
+
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                InputAction.Invoke(Define.InputType.Menu);
+                InputAction.Invoke(Define.InputType.Cancel);
+            }
+
+            if (Input.GetKey(KeyCode.Return))
+                InputAction.Invoke(Define.InputType.Check);
+
+            if (Input.GetMouseButton(1))
+            {
+                if (!_rightMousePressed)
+                {
+                    _rightMousePressedTime = Time.time;
+                }
+                _rightMousePressed = true;
+            }
+            else
+            {
+                if (_rightMousePressed) //클릭을 땠을 때
+                {
+                    if (Time.time < _rightMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
+                        InputAction.Invoke(Define.InputType.Attack);
+                }
+                _rightMousePressed = false;
+                _rightMousePressedTime = 0;
+            }
+
+            if (Input.GetKey(KeyCode.Space))
+                InputAction.Invoke(Define.InputType.Jump);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+                InputAction.Invoke(Define.InputType.Skill1);
+
+            if (Input.GetMouseButton(0))
+            {
+                if (!_leftMousePressed)
+                {
+                    _leftMousePressedTime = Time.time;
+                }
+                _leftMousePressed = true;
+            }
+            else
+            {
+                if (_leftMousePressed) //클릭을 땠을 때
+                {
+                    if (Time.time < _leftMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
+                        InputAction.Invoke(Define.InputType.Skill2);
+                }
+                _leftMousePressed = false;
+                _leftMousePressedTime = 0;
+            }
+
+            if (Input.GetKey(KeyCode.W))
+            {
+                InputAction.Invoke(Define.InputType.Up);
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                CurrentMoveDir = Define.InputDir.Right;
+                InputAction.Invoke(Define.InputType.Right);
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                InputAction.Invoke(Define.InputType.Down);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                CurrentMoveDir = Define.InputDir.Left;
+                InputAction.Invoke(Define.InputType.Left);
+            }
+
+            if (Managers.Network.IsConnected)
+            {
+                if (Managers.Network.Button5 != 0)
+                    InputAction.Invoke(Define.InputType.Menu);
+                if (Managers.Network.Button3 != 0)
+                    InputAction.Invoke(Define.InputType.Check);
+                if (Managers.Network.Button2 != 0)
+                    InputAction.Invoke(Define.InputType.Cancel);
+                if (Managers.Network.Button4 != 0)
+                    InputAction.Invoke(Define.InputType.Attack);
+                if (Managers.Network.Button3 != 0)
+                    InputAction.Invoke(Define.InputType.Jump);
+                if (Managers.Network.Button1 != 0)
+                    InputAction.Invoke(Define.InputType.Skill1);
+                if (Managers.Network.Button2 != 0)
+                    InputAction.Invoke(Define.InputType.Skill2);
+
+                CurrentMoveDir = Managers.Network.Move == 0b10 ? CurrentMoveDir :
+                    Managers.Network.Move == 0b00 ? Define.InputDir.Left : Define.InputDir.Right;
+
+                if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
+                {
+                    CurrentAimDir = Define.InputDir.Up;
+                    InputAction.Invoke(Define.InputType.Up);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
+                {
+                    CurrentAimDir = Define.InputDir.Right;
+                    InputAction.Invoke(Define.InputType.Right);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
+                {
+                    CurrentAimDir = Define.InputDir.Down;
+                    InputAction.Invoke(Define.InputType.Down);
+                    _joyStickPressed = false;
+                }
+                else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
+                {
+                    CurrentAimDir = Define.InputDir.Left;
+                    InputAction.Invoke(Define.InputType.Left);
+                    _joyStickPressed = false;
+                }
             }
         }
     }
@@ -119,6 +383,23 @@ public class InputManager
     }
 
     /**
+     * Input 조작 통합 이벤트 핸들러 등록
+     */
+    public void AddInputAction(Action<Define.InputType> inputEventHandler)
+    {
+        InputAction -= inputEventHandler;
+        InputAction += inputEventHandler;
+    }
+
+    /**
+     * Input 조작 통합 이벤트 핸들러 등록 해제
+     */
+    public void RemoveInputAction(Action<Define.InputType> inputEventHandler)
+    {
+        InputAction -= inputEventHandler;
+    }
+
+    /**
      * 화면 전환 등에 따라 이벤트 등록 전부해제
      */
     public void Clear()
@@ -126,5 +407,6 @@ public class InputManager
         KeyAction = null;
         MouseAction = null;
         UIKeyAction = null;
+        InputAction = null;
     }
 }
