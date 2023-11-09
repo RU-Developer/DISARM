@@ -65,6 +65,8 @@ public class InputManager
 
     public void OnUpdate()
     {
+        Debug.Log("Mouse Angle: " + CurrentAngle);
+
         // 컨트롤러를 사용하는 경우 마우스를 이용한 조작 불가
         if (Managers.Network.IsConnected)
             JoystickToAngle(Managers.Network.X, Managers.Network.Y);
