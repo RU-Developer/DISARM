@@ -73,40 +73,28 @@ public class InputManager
         else // Mouse Screen과 Player의 위치를 통해 각도 구하기
         {
             _player = Managers.Game.GetPlayer();
-            if (_player != null)
+            if (_player != null) // 플레이어가 null이 아닌지 확인
             {
-                LastAngle = CurrentAngle;
-                // 플레이어의 transform 컴포넌트를 저장
-                Transform playerTransform = _player.transform;
+                LastAngle = CurrentAngle; // 마지막 각도를 현재 각도로 설정
+                Transform playerTransform = _player.transform; // 플레이어의 transform 컴포넌트를 저장
 
-                // 마우스의 스크린 상의 위치를 입력 받음
-                Vector3 mousePosition = Input.mousePosition;
+                Vector3 mousePosition = Input.mousePosition; // 마우스의 스크린 상의 위치를 입력 받음
+                                                             // 마우스의 스크린 상의 위치를 월드 좌표로 변환함. 
+                Vector3 mouseWorldPosition = 
+                    Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 
+                        playerTransform.position.z)); // 여기서 z 좌표는 플레이어의 z 좌표와 동일하게 설정
+                Vector3 playerToMouse = mouseWorldPosition - playerTransform.position; // 플레이어와 마우스 사이의 벡터를 구함
 
-                // 마우스의 스크린 상의 위치를 월드 좌표로 변환함
-                Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
-
-                // 플레이어와 마우스 사이의 벡터를 구함
-                Vector3 playerToMouse = mouseWorldPosition - playerTransform.position;
-
-                // 플레이어와 마우스 사이의 벡터의 각도를 구함
-                CurrentAngle = Vector3.Angle(Vector3.up, playerToMouse);
-
-                // 플레이어와 마우스 사이의 벡터의 외적을 구함
-                Vector3 cross = Vector3.Cross(Vector3.up, playerToMouse);
-
-                // 외적의 z값이 음수면 각도를 반전시킴
-                if (cross.z < 0)
-                {
-                    CurrentAngle = -CurrentAngle;
-                }
-
-                // 각도를 0 ~ 360 범위로 맞춤
-                if (CurrentAngle < 0)
+                // Mathf.Atan2 함수를 사용하여 플레이어와 마우스 사이의 벡터의 각도를 구함.
+                // 이 함수는 -π에서 π까지의 범위에서 각도를 반환하므로,
+                // 각도를 0에서 360까지의 범위로 변환하기 위해 180을 더하고 결과에 180을 곱함
+                CurrentAngle = Mathf.Atan2(playerToMouse.x, playerToMouse.y) * Mathf.Rad2Deg;
+                if (CurrentAngle < 0) // 각도가 0보다 작으면 360을 더하여 0 ~ 360 범위로 맞춤
                 {
                     CurrentAngle += 360;
                 }
             }
-        } 
+        }
 
         //일시정지시
         if (Managers.Pause.IsPause)

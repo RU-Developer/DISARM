@@ -74,6 +74,11 @@ public class Managers : MonoBehaviour
             managers.AddComponent<Managers>();
             managers.AddComponent<NetworkManager>();
         }
+        else
+        {
+            managers.GetOrAddComponent<Managers>();
+            managers.GetOrAddComponent<NetworkManager>();
+        }
 
         DontDestroyOnLoad(managers);
         s_instance = managers.GetComponent<Managers>();
