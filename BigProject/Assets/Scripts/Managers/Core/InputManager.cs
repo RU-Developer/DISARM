@@ -49,7 +49,7 @@ public class InputManager
         }
 
         // x, y값을 double로 형변환하고, Math.Atan2 함수를 이용하여 라디안 값을 구함
-        double radian = Math.Atan2((double)y - 512, (double)x - 512);
+        double radian = Math.Atan2(512 - (double)y, (double)x - 512);
 
         // 라디안 값을 각도로 변환하고, 0 ~ 360 범위로 맞춤
         CurrentAngle = radian * 180 / Math.PI;
