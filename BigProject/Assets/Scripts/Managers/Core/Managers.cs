@@ -83,6 +83,8 @@ public class Managers : MonoBehaviour
         DontDestroyOnLoad(managers);
         s_instance = managers.GetComponent<Managers>();
         s_instance._network = managers.GetComponent<NetworkManager>();
+
+        s_instance._network.Init();
         s_instance._data.Init();
         s_instance._sound.Init();
         s_instance._pool.Init();

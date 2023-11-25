@@ -77,6 +77,11 @@ public class NetworkManager : MonoBehaviour
 
     void Start()
     {
+        
+    }
+
+    public void Init()
+    {
         Debug.Log("NetworkManager Start");
 
         if (udpThread != null)
@@ -129,6 +134,7 @@ public class NetworkManager : MonoBehaviour
                             Button5 = (button5Mask & data) >> button5Bit;
                             Button6 = (button6Mask & data) >> button6Bit;
                             Button7 = (button7Mask & data) >> button7Bit;
+                            Debug.Log($"X: {X}, Y: {Y}");
                         }
                         else
                         {

@@ -37,7 +37,7 @@ public class GameManager
 
     Action PlayerChangedAction = null;
 
-    public bool TEST { get; } = false; // 현재 화면에서 데이터를 읽어서 json파일에 반영시켜주기 : true
+    public bool TEST { get; } = true; // 현재 화면에서 데이터를 읽어서 json파일에 반영시켜주기 : true
 
     public void Init()
     {
