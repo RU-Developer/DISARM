@@ -77,6 +77,15 @@ public class NetworkManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("NetworkManager Start");
+
+        if (udpThread != null)
+        {
+            Debug.Log("udp is not null");
+            return;
+        }
+
+        Debug.Log("udpStart");
         // UDP 브로드캐스트 수신
         udpThread = new Thread(() =>
         {
@@ -84,6 +93,7 @@ public class NetworkManager : MonoBehaviour
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
             while (true)
             {
+                Debug.Log("udpReceive");
                 byte[] receivedBytes = udpClient.Receive(ref remoteEP);
                 string receivedString = Encoding.UTF8.GetString(receivedBytes);
                 Debug.Log("Received UDP broadcast from " + remoteEP + ": " + receivedString);
@@ -93,6 +103,7 @@ public class NetworkManager : MonoBehaviour
                 tcpClient.Connect(remoteEP.Address, 23456); // 라즈베리파이의 IP 주소와 포트 번호
 
                 IsConnected = true;
+                Debug.Log("TCP Connected!!");
 
                 // TCP로 데이터 수신
                 tcpThread = new Thread(() =>
@@ -118,8 +129,6 @@ public class NetworkManager : MonoBehaviour
                             Button5 = (button5Mask & data) >> button5Bit;
                             Button6 = (button6Mask & data) >> button6Bit;
                             Button7 = (button7Mask & data) >> button7Bit;
-
-                            //Debug.Log($"move: {Move}, x: {X}, y: {Y}, leftButton: {LeftButton}, rightButton: {RightButton}\nbutton1: {Button1}, button2: {Button2}");
                         }
                         else
                         {
@@ -143,17 +152,18 @@ public class NetworkManager : MonoBehaviour
             udpThread.Abort();
             udpThread = null;
         }
-        if (tcpThread != null)
-        {
-            tcpThread.Abort();
-            tcpThread = null;
-        }
 
         // TCP 연결 종료
         if (tcpClient != null)
         {
             tcpClient.Close();
             tcpClient = null;
+        }
+
+        if (tcpThread != null)
+        {
+            tcpThread.Abort();
+            tcpThread = null;
         }
     }
 }
