@@ -134,7 +134,7 @@ public class NetworkManager : MonoBehaviour
                             Button5 = (button5Mask & data) >> button5Bit;
                             Button6 = (button6Mask & data) >> button6Bit;
                             Button7 = (button7Mask & data) >> button7Bit;
-                            Debug.Log($"X: {X}, Y: {Y}");
+                            //Debug.Log($"X: {X}, Y: {Y} 1: {Button1} 2: {Button2} 3: {Button3} 4: {Button4} 5: {Button5}");
                         }
                         else
                         {
