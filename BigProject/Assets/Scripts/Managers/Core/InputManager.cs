@@ -2,6 +2,7 @@
 using System.Collections;
 using System;
 using UnityEngine.EventSystems;
+using UnityEngine.PlayerLoop;
 
 /**
  * UI이벤트가 아닌 마우스나 키보드의 직접 입력이 발생하는 경우에 대해
@@ -37,6 +38,8 @@ public class InputManager
     private float _rightMousePressedTime = 0;
 
     private bool _joyStickPressed = false;
+
+
 
     // JoyStick 값을 위가 0인 360도 값으로 반환
     // 조이스틱의 x, y값을 각도로 변환하는 함수
@@ -315,6 +318,15 @@ public class InputManager
                 }
             }
         }
+    }
+
+    /**
+     * Update 끝나고 실행 되는거.
+     * 
+     */
+    public void LateUpdate()
+    {
+        
     }
 
     /**

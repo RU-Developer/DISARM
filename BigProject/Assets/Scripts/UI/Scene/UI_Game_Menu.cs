@@ -10,7 +10,8 @@ public class UI_Game_Menu : UI_Scene
         MapMenuHandler,
         GameMenuResumeHandler,
         GameMenuOptionsHandler,
-        GameMenuMainHandler
+        GameMenuMainHandler,
+        GameMenuQuitHandler,
     }
 
     public override void Init()
@@ -42,6 +43,18 @@ public class UI_Game_Menu : UI_Scene
 
         BindEvent(GetObject((int)GameObjects.GameMenuMainHandler),
             evt => Debug.Log("Go to Main Lobby menu clicked"));
+
+        BindEvent(GetObject((int)GameObjects.GameMenuQuitHandler),
+            evt =>
+            {
+            #if UNITY_EDITOR
+                // Application.Quit() does not work in the editor so
+                // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
+            });
 
         Managers.Input.AddUIKeyAction(OnKeyBoard);
     }
