@@ -102,14 +102,12 @@ public class PlayerController : BaseController
     void Look()
     {
         //플레이어의 위,아래를 봤을 때 특정 animation을 동작시키는 코드
-        if (Managers.Input.CurrentMoveDir == Define.InputDir.Right)
-        {
-            headAngle = 90 - (float)Managers.Input.GunAngle;
-        }
-        else if(Managers.Input.CurrentMoveDir == Define.InputDir.Left)
-        {
-            headAngle = 270-(float)Managers.Input.GunAngle;
-        }
+        headAngle = (90 - (float)Managers.Input.GunAngle)*(int)Managers.Input.CurrentMoveDir;
+
+        if (headAngle < -20)
+            headAngle = -20;
+        if (headAngle>20)
+            headAngle = 20;
         
         head.GetComponent<Transform>().rotation = Quaternion.AngleAxis(headAngle, Vector3.forward * Time.deltaTime);
     }

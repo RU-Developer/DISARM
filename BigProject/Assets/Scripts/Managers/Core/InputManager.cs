@@ -106,55 +106,53 @@ public class InputManager
                 UIKeyAction.Invoke();
 
             // UI 이벤트
-            if (InputAction == null)
-                return;
 
             if (Input.GetKey(KeyCode.Escape))
             {
-                InputAction.Invoke(Define.InputType.Menu);
-                InputAction.Invoke(Define.InputType.Cancel);
+                InputAction?.Invoke(Define.InputType.Menu);
+                InputAction?.Invoke(Define.InputType.Cancel);
             }
             
             if (Input.GetKey(KeyCode.Return))
-                InputAction.Invoke(Define.InputType.Check);
+                InputAction?.Invoke(Define.InputType.Check);
 
             if (Input.GetKey(KeyCode.W))
-                InputAction.Invoke(Define.InputType.Up);
+                InputAction?.Invoke(Define.InputType.Up);
             if (Input.GetKey(KeyCode.D))
-                InputAction.Invoke(Define.InputType.Right);
+                InputAction?.Invoke(Define.InputType.Right);
             if (Input.GetKey(KeyCode.S))
-                InputAction.Invoke(Define.InputType.Down);
+                InputAction?.Invoke(Define.InputType.Down);
             if (Input.GetKey(KeyCode.A))
-                InputAction.Invoke(Define.InputType.Left);
+                InputAction?.Invoke(Define.InputType.Left);
 
 
             if (Managers.Network.IsConnected)
             {
                 if (Managers.Network.Button5 != 0)
-                    InputAction.Invoke(Define.InputType.Menu);
+                    InputAction?.Invoke(Define.InputType.Menu);
                 if (Managers.Network.Button3 != 0)
-                    InputAction.Invoke(Define.InputType.Check);
+                    InputAction?.Invoke(Define.InputType.Check);
                 if (Managers.Network.Button2 != 0)
-                    InputAction.Invoke(Define.InputType.Cancel);
+                    InputAction?.Invoke(Define.InputType.Cancel);
 
                 if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
                 {
-                    InputAction.Invoke(Define.InputType.Up);
+                    InputAction?.Invoke(Define.InputType.Up);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
                 {
-                    InputAction.Invoke(Define.InputType.Right);
+                    InputAction?.Invoke(Define.InputType.Right);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
                 {
-                    InputAction.Invoke(Define.InputType.Down);
+                    InputAction?.Invoke(Define.InputType.Down);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
                 {
-                    InputAction.Invoke(Define.InputType.Left);
+                    InputAction?.Invoke(Define.InputType.Left);
                     _joyStickPressed = false;
                 }
             }
@@ -199,18 +197,14 @@ public class InputManager
                 _leftMousePressedTime = 0;
             }
 
-
-            if (InputAction == null)
-                return;
-
             if (Input.GetKey(KeyCode.Escape))
             {
-                InputAction.Invoke(Define.InputType.Menu);
-                InputAction.Invoke(Define.InputType.Cancel);
+                InputAction?.Invoke(Define.InputType.Menu);
+                InputAction?.Invoke(Define.InputType.Cancel);
             }
 
             if (Input.GetKey(KeyCode.Return))
-                InputAction.Invoke(Define.InputType.Check);
+                InputAction?.Invoke(Define.InputType.Check);
 
             if (Input.GetMouseButton(1))
             {
@@ -225,17 +219,17 @@ public class InputManager
                 if (_rightMousePressed) //클릭을 땠을 때
                 {
                     if (Time.time < _rightMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
-                        InputAction.Invoke(Define.InputType.Attack);
+                        InputAction?.Invoke(Define.InputType.Attack);
                 }
                 _rightMousePressed = false;
                 _rightMousePressedTime = 0;
             }
 
             if (Input.GetKey(KeyCode.Space))
-                InputAction.Invoke(Define.InputType.Jump);
+                InputAction?.Invoke(Define.InputType.Jump);
 
             if (Input.GetKey(KeyCode.LeftShift))
-                InputAction.Invoke(Define.InputType.Skill1);
+                InputAction?.Invoke(Define.InputType.Skill1);
 
             if (Input.GetMouseButton(0))
             {
@@ -250,7 +244,7 @@ public class InputManager
                 if (_leftMousePressed) //클릭을 땠을 때
                 {
                     if (Time.time < _leftMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
-                        InputAction.Invoke(Define.InputType.Skill2);
+                        InputAction?.Invoke(Define.InputType.Skill2);
                 }
                 _leftMousePressed = false;
                 _leftMousePressedTime = 0;
@@ -258,39 +252,39 @@ public class InputManager
 
             if (Input.GetKey(KeyCode.W))
             {
-                InputAction.Invoke(Define.InputType.Up);
+                InputAction?.Invoke(Define.InputType.Up);
             }
             if (Input.GetKey(KeyCode.D))
             {
                 CurrentMoveDir = Define.InputDir.Right;
-                InputAction.Invoke(Define.InputType.Right);
+                InputAction?.Invoke(Define.InputType.Right);
             }
             if (Input.GetKey(KeyCode.S))
             {
-                InputAction.Invoke(Define.InputType.Down);
+                InputAction?.Invoke(Define.InputType.Down);
             }
             if (Input.GetKey(KeyCode.A))
             {
                 CurrentMoveDir = Define.InputDir.Left;
-                InputAction.Invoke(Define.InputType.Left);
+                InputAction?.Invoke(Define.InputType.Left);
             }
 
             if (Managers.Network.IsConnected)
             {
                 if (Managers.Network.Button5 != 0)
-                    InputAction.Invoke(Define.InputType.Menu);
+                    InputAction?.Invoke(Define.InputType.Menu);
                 if (Managers.Network.Button3 != 0)
-                    InputAction.Invoke(Define.InputType.Check);
+                    InputAction?.Invoke(Define.InputType.Check);
                 if (Managers.Network.Button2 != 0)
-                    InputAction.Invoke(Define.InputType.Cancel);
+                    InputAction?.Invoke(Define.InputType.Cancel);
                 if (Managers.Network.Button4 != 0)
-                    InputAction.Invoke(Define.InputType.Attack);
+                    InputAction?.Invoke(Define.InputType.Attack);
                 if (Managers.Network.Button3 != 0)
-                    InputAction.Invoke(Define.InputType.Jump);
+                    InputAction?.Invoke(Define.InputType.Jump);
                 if (Managers.Network.Button1 != 0)
-                    InputAction.Invoke(Define.InputType.Skill1);
+                    InputAction?.Invoke(Define.InputType.Skill1);
                 if (Managers.Network.Button2 != 0)
-                    InputAction.Invoke(Define.InputType.Skill2);
+                    InputAction?.Invoke(Define.InputType.Skill2);
 
                 CurrentMoveDir = Managers.Network.Move == 0b10 ? CurrentMoveDir :
                     Managers.Network.Move == 0b00 ? Define.InputDir.Left : Define.InputDir.Right;
@@ -298,25 +292,25 @@ public class InputManager
                 if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
                 {
                     CurrentAimDir = Define.InputDir.Up;
-                    InputAction.Invoke(Define.InputType.Up);
+                    InputAction?.Invoke(Define.InputType.Up);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
                 {
                     CurrentAimDir = Define.InputDir.Right;
-                    InputAction.Invoke(Define.InputType.Right);
+                    InputAction?.Invoke(Define.InputType.Right);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
                 {
                     CurrentAimDir = Define.InputDir.Down;
-                    InputAction.Invoke(Define.InputType.Down);
+                    InputAction?.Invoke(Define.InputType.Down);
                     _joyStickPressed = false;
                 }
                 else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
                 {
                     CurrentAimDir = Define.InputDir.Left;
-                    InputAction.Invoke(Define.InputType.Left);
+                    InputAction?.Invoke(Define.InputType.Left);
                     _joyStickPressed = false;
                 }
             }
