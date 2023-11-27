@@ -9,19 +9,25 @@ public class Define
 {
     public enum InputType
     {
-        Angle, // 마우스나 조이스틱의 각도를 받는 타입 플레이어 기준 위부터 0 ~ 360. 조이스틱은 위부터 360도
+        // 마우스나 조이스틱의 각도를 받는 타입 플레이어 기준 위부터 0 ~ 360. 조이스틱은 위부터 360도
+
         Left, Right, Up, Down, // UI 포커스 조작 타입: 키보드는 WASD, 조이스틱으로 각도 확인해서 조작
-        Check, // UI 확인 버튼 Enter Button3
+        Ok, // UI 확인 버튼 Enter Button3
         Cancel, // UI 취소 버튼 Escape Button2
         Menu, // 메뉴 열고 닫는 버튼 Escape Button5
         Attack, // 공격 버튼 Mouse Right Button4
         Jump, // 점프 버튼 Spacebar Button3
         Skill1, Skill2, // Skill1: Left Shift Button1, Skill2: Mouse Left Button2
+
+        Length // Input Type 갯수
     }
 
     public enum InputDir
     {
-        Left=-1, Right=1, Up=2, Down=-2,
+        Left=-1, 
+        Right=1, 
+        Up=2, 
+        Down=-2,
     }
 
     public enum Weapon

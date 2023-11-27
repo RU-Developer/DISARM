@@ -11,31 +11,52 @@ using UnityEngine.PlayerLoop;
  */
 public class InputManager
 {
+    // InputMap
+    private bool[] _inputDownMap = new bool[(int)Define.InputType.Length];
+    private bool[] _inputMap = new bool[(int)Define.InputType.Length];
+    private bool[] _inputUpMap = new bool[(int)Define.InputType.Length];
+
     private Action KeyAction = null;
     private Action<Define.MouseEvent> MouseAction = null;
     private Action UIKeyAction = null;
 
-    private Action<Define.InputType> InputAction = null;
-
-    // 이전 마우스나 조이스틱 각도
-    public double LastAngle { get; private set; } = 0;
     // 현재 마우스나 조이스틱 각도
     public double CurrentAngle { get; private set; } = 0;
 
     public double GunAngle { get; private set; } = 0;
-    // 현재 조준 방향
-    public Define.InputDir CurrentAimDir { get; private set; } = Define.InputDir.Right;
     // 현재 이동 방향
     public Define.InputDir CurrentMoveDir { get; private set; } = Define.InputDir.Right;
-    // 조준 방향과 이동 방향은 Pause되지 않은 상태일 때만 변함
+
+    /**
+     * Update 한번당 한번씩 초기화됨
+     */
+    public bool GetInputDown(Define.InputType inputType)
+    {
+        return _inputDownMap[(int)inputType];
+    }
+
+    /**
+     * 계속 눌리는 상태인지
+     */
+    public bool GetInput(Define.InputType inputType)
+    {
+        return _inputMap[(int)inputType];
+    }
+
+    /**
+     * 땠을 때 한번 측정함
+     */
+    public bool GetInputUp(Define.InputType inputType)
+    {
+        return _inputUpMap[(int)inputType];
+    }
+
+
 
     private GameObject _player;
 
     private bool _leftMousePressed = false; //현재 마우스가 눌러지고 있는 상태인지 여부
     private float _leftMousePressedTime = 0;
-
-    private bool _rightMousePressed = false;
-    private float _rightMousePressedTime = 0;
 
     private bool _joyStickPressed = false;
 
@@ -45,7 +66,6 @@ public class InputManager
     // 조이스틱의 x, y값을 각도로 변환하는 함수
     double JoystickToAngle(int x, int y)
     {
-        LastAngle = CurrentAngle;
         // x, y값이 500 ~ 550 사이면 조이스틱이 움직이지 않은 것으로 판단하고 이전 값을 반환
         if (x >= 500 && x <= 550 && y >= 500 && y <= 550)
         {
@@ -65,11 +85,14 @@ public class InputManager
 
         // 각도를 반시계 방향으로 90도 회전시킴
         CurrentAngle = (CurrentAngle + 270) % 360;
+
+        // TODO: GunAngle 넣어줘야 함
         return CurrentAngle;
     }
 
     public void OnUpdate()
     {
+        #region 조준 각도 설정
         // 컨트롤러를 사용하는 경우 마우스를 이용한 조작 불가
         if (Managers.Network.IsConnected)
             JoystickToAngle(Managers.Network.X, Managers.Network.Y);
@@ -78,7 +101,6 @@ public class InputManager
             _player = Managers.Game.GetPlayer();
             if (_player != null) // 플레이어가 null이 아닌지 확인
             {
-                LastAngle = CurrentAngle; // 마지막 각도를 현재 각도로 설정
                 Transform playerTransform = _player.transform; // 플레이어의 transform 컴포넌트를 저장
 
                 Vector3 mousePosition = Input.mousePosition; // 마우스의 스크린 상의 위치를 입력 받음
@@ -95,74 +117,23 @@ public class InputManager
 
                 GunAngle = Mathf.Atan2(Mathf.Abs(playerToMouse.x), playerToMouse.y) * Mathf.Rad2Deg;
                 if (CurrentAngle < 0) // 각도가 0보다 작으면 360을 더하여 0 ~ 360 범위로 맞춤
-                {
                     CurrentAngle += 360;
-                }
             }
         }
+        #endregion
 
+        #region 일시정지 상태일 경우(메뉴를 연 경우)
         //일시정지시
         if (Managers.Pause.IsPause)
         {
             //UI 키보드 이벤트는 일시정지된 상태에서도 진행
             if (Input.anyKey && UIKeyAction != null)
                 UIKeyAction.Invoke();
-
-            // UI 이벤트
-
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                InputAction?.Invoke(Define.InputType.Menu);
-                InputAction?.Invoke(Define.InputType.Cancel);
-            }
-            
-            if (Input.GetKey(KeyCode.Return))
-                InputAction?.Invoke(Define.InputType.Check);
-
-            if (Input.GetKey(KeyCode.W))
-                InputAction?.Invoke(Define.InputType.Up);
-            if (Input.GetKey(KeyCode.D))
-                InputAction?.Invoke(Define.InputType.Right);
-            if (Input.GetKey(KeyCode.S))
-                InputAction?.Invoke(Define.InputType.Down);
-            if (Input.GetKey(KeyCode.A))
-                InputAction?.Invoke(Define.InputType.Left);
-
-
-            if (Managers.Network.IsConnected)
-            {
-                if (Managers.Network.Button5 != 0)
-                    InputAction?.Invoke(Define.InputType.Menu);
-                if (Managers.Network.Button3 != 0)
-                    InputAction?.Invoke(Define.InputType.Check);
-                if (Managers.Network.Button2 != 0)
-                    InputAction?.Invoke(Define.InputType.Cancel);
-
-                if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
-                {
-                    InputAction?.Invoke(Define.InputType.Up);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
-                {
-                    InputAction?.Invoke(Define.InputType.Right);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
-                {
-                    InputAction?.Invoke(Define.InputType.Down);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
-                {
-                    InputAction?.Invoke(Define.InputType.Left);
-                    _joyStickPressed = false;
-                }
-            }
-
             return;
         }
+        #endregion
 
+        #region 플레이중 키보드 조작
         //UI 키보드 이벤트
         if (Input.anyKey && UIKeyAction != null)
             UIKeyAction.Invoke();
@@ -170,11 +141,12 @@ public class InputManager
         //키보드 이벤트
         if (Input.anyKey && KeyAction != null)
             KeyAction.Invoke();
-
-        //UI 위에 마우스 있을 시
+        #endregion
+        //UI 위에 마우스 있을 시: UI 마우스 이벤트는 따로 다룸. InputManager가 아님
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
+        #region 마우스 이벤트
         //마우스 이벤트
         if (MouseAction != null)
         {
@@ -199,134 +171,547 @@ public class InputManager
                 _leftMousePressed = false;
                 _leftMousePressedTime = 0;
             }
-
-            if (Input.GetKey(KeyCode.Escape))
-            {
-                InputAction?.Invoke(Define.InputType.Menu);
-                InputAction?.Invoke(Define.InputType.Cancel);
-            }
-
-            if (Input.GetKey(KeyCode.Return))
-                InputAction?.Invoke(Define.InputType.Check);
-
-            if (Input.GetMouseButton(1))
-            {
-                if (!_rightMousePressed)
-                {
-                    _rightMousePressedTime = Time.time;
-                }
-                _rightMousePressed = true;
-            }
-            else
-            {
-                if (_rightMousePressed) //클릭을 땠을 때
-                {
-                    if (Time.time < _rightMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
-                        InputAction?.Invoke(Define.InputType.Attack);
-                }
-                _rightMousePressed = false;
-                _rightMousePressedTime = 0;
-            }
-
-            if (Input.GetKey(KeyCode.Space))
-                InputAction?.Invoke(Define.InputType.Jump);
-
-            if (Input.GetKey(KeyCode.LeftShift))
-                InputAction?.Invoke(Define.InputType.Skill1);
-
-            if (Input.GetMouseButton(0))
-            {
-                if (!_leftMousePressed)
-                {
-                    _leftMousePressedTime = Time.time;
-                }
-                _leftMousePressed = true;
-            }
-            else
-            {
-                if (_leftMousePressed) //클릭을 땠을 때
-                {
-                    if (Time.time < _leftMousePressedTime + 0.2f) //누른 기간이 0.2초 이내인 경우
-                        InputAction?.Invoke(Define.InputType.Skill2);
-                }
-                _leftMousePressed = false;
-                _leftMousePressedTime = 0;
-            }
-
-            if (Input.GetKey(KeyCode.W))
-            {
-                InputAction?.Invoke(Define.InputType.Up);
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                CurrentMoveDir = Define.InputDir.Right;
-                InputAction?.Invoke(Define.InputType.Right);
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                InputAction?.Invoke(Define.InputType.Down);
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                CurrentMoveDir = Define.InputDir.Left;
-                InputAction?.Invoke(Define.InputType.Left);
-            }
-
-            if (Managers.Network.IsConnected)
-            {
-                if (Managers.Network.Button5 != 0)
-                    InputAction?.Invoke(Define.InputType.Menu);
-                if (Managers.Network.Button3 != 0)
-                    InputAction?.Invoke(Define.InputType.Check);
-                if (Managers.Network.Button2 != 0)
-                    InputAction?.Invoke(Define.InputType.Cancel);
-                if (Managers.Network.Button4 != 0)
-                    InputAction?.Invoke(Define.InputType.Attack);
-                if (Managers.Network.Button3 != 0)
-                    InputAction?.Invoke(Define.InputType.Jump);
-                if (Managers.Network.Button1 != 0)
-                    InputAction?.Invoke(Define.InputType.Skill1);
-                if (Managers.Network.Button2 != 0)
-                    InputAction?.Invoke(Define.InputType.Skill2);
-
-                CurrentMoveDir = Managers.Network.Move == 0b10 ? CurrentMoveDir :
-                    Managers.Network.Move == 0b00 ? Define.InputDir.Left : Define.InputDir.Right;
-
-                if ((CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315) && _joyStickPressed)
-                {
-                    CurrentAimDir = Define.InputDir.Up;
-                    InputAction?.Invoke(Define.InputType.Up);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
-                {
-                    CurrentAimDir = Define.InputDir.Right;
-                    InputAction?.Invoke(Define.InputType.Right);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
-                {
-                    CurrentAimDir = Define.InputDir.Down;
-                    InputAction?.Invoke(Define.InputType.Down);
-                    _joyStickPressed = false;
-                }
-                else if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
-                {
-                    CurrentAimDir = Define.InputDir.Left;
-                    InputAction?.Invoke(Define.InputType.Left);
-                    _joyStickPressed = false;
-                }
-            }
         }
+        #endregion
     }
 
     /**
      * Update 끝나고 실행 되는거.
-     * 
+     * Input Map을 여기서 업데이트
+     * Input Down에 대해서 처리할 것
+     * Press, Up을 이용
+     * Press는 계속 누르고 있는 것. 누르고 있는 동안 딱 한번만 처리할 것
+     * Up은 땐 것. 때고 나야 다시 키보드 맵에 등록할 수 있게됨
      */
     public void LateUpdate()
     {
-        
+        // 매 Update마다 초기화
+        for (int i = 0; i < _inputUpMap.Length; i++)
+        {
+            _inputDownMap[i] = false;
+            _inputUpMap[i] = false;
+        }
+
+        #region 네트워크 연결 안되있을 때(키보드 마우스 조작)
+        if (Managers.Network.IsConnected == false)
+        {
+            #region InputType Left
+            if (Input.GetKey(KeyCode.A))
+            {
+                if (Managers.Pause.IsPause == false)
+                    CurrentMoveDir = Define.InputDir.Left;
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Left] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Left] = true;
+                    _inputMap[(int)Define.InputType.Left] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Left])
+                {
+                    _inputMap[(int)Define.InputType.Left] = false;
+                    _inputUpMap[(int)Define.InputType.Left] = true;
+                }
+            }
+            #endregion
+            #region InputType Right
+            if (Input.GetKey(KeyCode.D))
+            {
+                if (Managers.Pause.IsPause == false)
+                    CurrentMoveDir = Define.InputDir.Right;
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Right] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Right] = true;
+                    _inputMap[(int)Define.InputType.Right] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Right])
+                {
+                    _inputMap[(int)Define.InputType.Right] = false;
+                    _inputUpMap[(int)Define.InputType.Right] = true;
+                }
+            }
+            #endregion
+            #region InputType Up
+            if (Input.GetKey(KeyCode.W))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Up] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Up] = true;
+                    _inputMap[(int)Define.InputType.Up] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Up])
+                {
+                    _inputMap[(int)Define.InputType.Up] = false;
+                    _inputUpMap[(int)Define.InputType.Up] = true;
+                }
+            }
+            #endregion
+            #region InputType Down
+            if (Input.GetKey(KeyCode.S))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Down] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Down] = true;
+                    _inputMap[(int)Define.InputType.Down] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Down])
+                {
+                    _inputMap[(int)Define.InputType.Down] = false;
+                    _inputUpMap[(int)Define.InputType.Down] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Ok
+            if (Input.GetKey(KeyCode.Return))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Ok] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Ok] = true;
+                    _inputMap[(int)Define.InputType.Ok] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Ok])
+                {
+                    _inputMap[(int)Define.InputType.Ok] = false;
+                    _inputUpMap[(int)Define.InputType.Ok] = true;
+                }
+            }
+            #endregion
+            #region InputType Cancel
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Cancel] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Cancel] = true;
+                    _inputMap[(int)Define.InputType.Cancel] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Cancel])
+                {
+                    _inputMap[(int)Define.InputType.Cancel] = false;
+                    _inputUpMap[(int)Define.InputType.Cancel] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Menu
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Menu] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Menu] = true;
+                    _inputMap[(int)Define.InputType.Menu] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Menu])
+                {
+                    _inputMap[(int)Define.InputType.Menu] = false;
+                    _inputUpMap[(int)Define.InputType.Menu] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Attack
+            // UI 위가 아닌 곳에 마우스가 있을때
+            if (EventSystem.current == null || EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                if (Input.GetMouseButton(1)) // 우클릭
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Attack] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Attack] = true;
+                        _inputMap[(int)Define.InputType.Attack] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Attack])
+                    {
+                        _inputMap[(int)Define.InputType.Attack] = false;
+                        _inputUpMap[(int)Define.InputType.Attack] = true;
+                    }
+                }
+            } 
+            #endregion
+            #region InputType Jump
+            if (Input.GetKey(KeyCode.Space))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Jump] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Jump] = true;
+                    _inputMap[(int)Define.InputType.Jump] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Jump])
+                {
+                    _inputMap[(int)Define.InputType.Jump] = false;
+                    _inputUpMap[(int)Define.InputType.Jump] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Skill1
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Skill1] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Skill1] = true;
+                    _inputMap[(int)Define.InputType.Skill1] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Skill1])
+                {
+                    _inputMap[(int)Define.InputType.Skill1] = false;
+                    _inputUpMap[(int)Define.InputType.Skill1] = true;
+                }
+            }
+            #endregion
+            #region InputType Skill2
+            //UI가 아닌 곳 위에 마우스가 있을 때
+            if (EventSystem.current == null || EventSystem.current.IsPointerOverGameObject() == false)
+            {
+                if (Input.GetMouseButton(0)) // 좌클릭
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Skill2] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Skill2] = true;
+                        _inputMap[(int)Define.InputType.Skill2] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Skill2])
+                    {
+                        _inputMap[(int)Define.InputType.Skill2] = false;
+                        _inputUpMap[(int)Define.InputType.Skill2] = true;
+                    }
+                }
+            }
+            #endregion
+        }
+        #endregion
+        #region 네트워크 연결이 되어있을 때(컨트롤러 조작)
+        else
+        {
+            // 일시정지 상태일 경우
+            if (Managers.Pause.IsPause)
+            {
+                #region InputType Up
+                if (CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315)
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Up] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Up] = true;
+                        _inputMap[(int)Define.InputType.Up] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Up])
+                    {
+                        _inputMap[(int)Define.InputType.Up] = false;
+                        _inputUpMap[(int)Define.InputType.Up] = true;
+                    }
+                }
+                #endregion
+                #region InputType Right
+                if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Right] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Right] = true;
+                        _inputMap[(int)Define.InputType.Right] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Right])
+                    {
+                        _inputMap[(int)Define.InputType.Right] = false;
+                        _inputUpMap[(int)Define.InputType.Right] = true;
+                    }
+                }
+                #endregion
+                #region InputType Down
+                if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Down] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Down] = true;
+                        _inputMap[(int)Define.InputType.Down] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Down])
+                    {
+                        _inputMap[(int)Define.InputType.Down] = false;
+                        _inputUpMap[(int)Define.InputType.Down] = true;
+                    }
+                }
+                #endregion
+                #region InputType Left
+                if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
+                {
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Left] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Left] = true;
+                        _inputMap[(int)Define.InputType.Left] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Left])
+                    {
+                        _inputMap[(int)Define.InputType.Left] = false;
+                        _inputUpMap[(int)Define.InputType.Left] = true;
+                    }
+                }
+                #endregion
+            }
+            else
+            {
+                #region InputType Left
+                if (Managers.Network.Move == 0b00)
+                {
+                    CurrentMoveDir = Define.InputDir.Left;
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Left] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Left] = true;
+                        _inputMap[(int)Define.InputType.Left] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Left])
+                    {
+                        _inputMap[(int)Define.InputType.Left] = false;
+                        _inputUpMap[(int)Define.InputType.Left] = true;
+                    }
+                }
+                #endregion
+                #region InputType Right
+                if (Managers.Network.Move == 0b01)
+                {
+                    CurrentMoveDir = Define.InputDir.Right;
+                    // 안눌리고 있었으면
+                    if (_inputMap[(int)Define.InputType.Right] == false)
+                    {
+                        _inputDownMap[(int)Define.InputType.Right] = true;
+                        _inputMap[(int)Define.InputType.Right] = true;
+                    }
+                }
+                else
+                {
+                    // 눌렀다가 때는 경우
+                    if (_inputMap[(int)Define.InputType.Right])
+                    {
+                        _inputMap[(int)Define.InputType.Right] = false;
+                        _inputUpMap[(int)Define.InputType.Right] = true;
+                    }
+                }
+                #endregion
+            }
+
+            // 나머지는 Pause에 관계 없이 안겹치기 때문에 그냥 받음
+            #region InputType Ok
+            if (Managers.Network.Button3 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Ok] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Ok] = true;
+                    _inputMap[(int)Define.InputType.Ok] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Ok])
+                {
+                    _inputMap[(int)Define.InputType.Ok] = false;
+                    _inputUpMap[(int)Define.InputType.Ok] = true;
+                }
+            }
+            #endregion
+            #region InputType Cancel
+            if (Managers.Network.Button2 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Cancel] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Cancel] = true;
+                    _inputMap[(int)Define.InputType.Cancel] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Cancel])
+                {
+                    _inputMap[(int)Define.InputType.Cancel] = false;
+                    _inputUpMap[(int)Define.InputType.Cancel] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Menu
+            if (Managers.Network.Button5 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Menu] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Menu] = true;
+                    _inputMap[(int)Define.InputType.Menu] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Menu])
+                {
+                    _inputMap[(int)Define.InputType.Menu] = false;
+                    _inputUpMap[(int)Define.InputType.Menu] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Attack
+            if (Managers.Network.Button4 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Attack] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Attack] = true;
+                    _inputMap[(int)Define.InputType.Attack] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Attack])
+                {
+                    _inputMap[(int)Define.InputType.Attack] = false;
+                    _inputUpMap[(int)Define.InputType.Attack] = true;
+                }
+            }
+            #endregion
+            #region InputType Jump
+            if (Managers.Network.Button3 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Jump] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Jump] = true;
+                    _inputMap[(int)Define.InputType.Jump] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Jump])
+                {
+                    _inputMap[(int)Define.InputType.Jump] = false;
+                    _inputUpMap[(int)Define.InputType.Jump] = true;
+                }
+            }
+            #endregion
+
+            #region InputType Skill1
+            if (Managers.Network.Button1 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Skill1] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Skill1] = true;
+                    _inputMap[(int)Define.InputType.Skill1] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Skill1])
+                {
+                    _inputMap[(int)Define.InputType.Skill1] = false;
+                    _inputUpMap[(int)Define.InputType.Skill1] = true;
+                }
+            }
+            #endregion
+            #region InputType Skill2
+            if (Managers.Network.Button2 != 0)
+            {
+                // 안눌리고 있었으면
+                if (_inputMap[(int)Define.InputType.Skill2] == false)
+                {
+                    _inputDownMap[(int)Define.InputType.Skill2] = true;
+                    _inputMap[(int)Define.InputType.Skill2] = true;
+                }
+            }
+            else
+            {
+                // 눌렀다가 때는 경우
+                if (_inputMap[(int)Define.InputType.Skill2])
+                {
+                    _inputMap[(int)Define.InputType.Skill2] = false;
+                    _inputUpMap[(int)Define.InputType.Skill2] = true;
+                }
+            }
+            #endregion
+        }
+        #endregion
     }
 
     /**
@@ -381,23 +766,6 @@ public class InputManager
     }
 
     /**
-     * Input 조작 통합 이벤트 핸들러 등록
-     */
-    public void AddInputAction(Action<Define.InputType> inputEventHandler)
-    {
-        InputAction -= inputEventHandler;
-        InputAction += inputEventHandler;
-    }
-
-    /**
-     * Input 조작 통합 이벤트 핸들러 등록 해제
-     */
-    public void RemoveInputAction(Action<Define.InputType> inputEventHandler)
-    {
-        InputAction -= inputEventHandler;
-    }
-
-    /**
      * 화면 전환 등에 따라 이벤트 등록 전부해제
      */
     public void Clear()
@@ -405,6 +773,5 @@ public class InputManager
         KeyAction = null;
         MouseAction = null;
         UIKeyAction = null;
-        InputAction = null;
     }
 }
