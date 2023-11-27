@@ -279,7 +279,7 @@ public class InputManager
             #endregion
 
             #region InputType Ok
-            if (Input.GetKey(KeyCode.Return))
+            if (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter))
             {
                 // 안눌리고 있었으면
                 if (_inputMap[(int)Define.InputType.Ok] == false)
