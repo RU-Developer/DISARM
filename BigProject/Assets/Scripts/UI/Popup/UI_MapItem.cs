@@ -28,7 +28,6 @@ public class UI_MapItem : UI_Popup
     public override void Init()
     {
         base.Init();
-        Managers.Input.AddUIKeyAction(OnKeyBoard);
         Bind<GameObject>(typeof(GameObjects));
         Bind<Text>(typeof(Texts));
         Bind<Image>(typeof(Images));
@@ -39,16 +38,18 @@ public class UI_MapItem : UI_Popup
         GetImage((int)Images.ItemIcon).sprite = Managers.Resource.Load<Sprite>(Managers.Data.IconDict[_icon].path);
     }
 
-    private void OnKeyBoard()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        // Ok나 Cancel 누르면 닫기
+        if (Managers.Input.GetInputDown(Define.InputType.Ok) || Managers.Input.GetInputDown(Define.InputType.Cancel))
+        {
             Close();
+        }
     }
 
     private void Close()
     {
         Managers.Pause.Play();
-        Managers.Input.RemoveUIKeyAction(OnKeyBoard);
         ClosePopupUI();
     }
 

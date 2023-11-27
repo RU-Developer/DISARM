@@ -25,7 +25,6 @@ public class MapItem : MonoBehaviour
     {
         _player = Managers.Game.GetPlayer();
         Managers.Game.AddPlayerChangedAction(ChangePlayer);
-        Managers.Input.AddKeyAction(OnGet);
         _eventDistance = 2.0f;
         _updated = false;
         SetMapItem();
@@ -74,6 +73,8 @@ public class MapItem : MonoBehaviour
 
     private void Update()
     {
+        OnGet();
+
         if (!_updated)
             return;
 
@@ -94,7 +95,7 @@ public class MapItem : MonoBehaviour
      */
     private void OnGet()
     {
-        if (Input.GetKeyDown(KeyCode.Return) == false || _detail == null || _item == null || _player == null)
+        if (Managers.Input.GetInputDown(Define.InputType.Ok) == false || _detail == null || _item == null || _player == null)
             return;
 
         float distance = Vector2.Distance(new Vector2(_player.transform.position.x, _player.transform.position.y),
@@ -108,7 +109,6 @@ public class MapItem : MonoBehaviour
         Managers.Sound.Play("item_get");
 
         Managers.Game.RemovePlayerChangedAction(ChangePlayer);
-        Managers.Input.RemoveKeyAction(OnGet);
 
         Managers.UI.ShowPopupUI<UI_MapItem>().SetInfo(_detail.name, _detail.description, _detail.icon);
         Managers.Pause.Pause();
