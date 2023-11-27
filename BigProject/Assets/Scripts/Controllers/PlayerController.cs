@@ -38,6 +38,7 @@ public class PlayerController : BaseController
     //플레이어 고정 변수
     [HideInInspector] public bool isFix;
 
+
     //여러 기능과 관련된 조건
     private bool isWallBehind, isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
         isGrounded = false, isWallJump = false, isRoll = false, fixFlip = false;
@@ -101,22 +102,13 @@ public class PlayerController : BaseController
     void Look()
     {
         //플레이어의 위,아래를 봤을 때 특정 animation을 동작시키는 코드
-        headAngle = playerGun.angle;
-        if (dir > 0)
+        if (Managers.Input.CurrentMoveDir == Define.InputDir.Right)
         {
-            if (playerGun.angle > 20)
-                headAngle = 20;
-            else if (playerGun.angle < -20)
-                headAngle = -20;
+            headAngle = 90 - (float)Managers.Input.GunAngle;
         }
-        
-
-        if (dir < 0)
+        else if(Managers.Input.CurrentMoveDir == Define.InputDir.Left)
         {
-            if (playerGun.angle > 20 && playerGun.angle<90)
-                headAngle = 20;
-            else if (playerGun.angle > 90 && playerGun.angle < 340)
-                headAngle = 340;
+            headAngle = 270-(float)Managers.Input.GunAngle;
         }
         
         head.GetComponent<Transform>().rotation = Quaternion.AngleAxis(headAngle, Vector3.forward * Time.deltaTime);

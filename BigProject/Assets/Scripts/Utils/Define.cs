@@ -21,7 +21,7 @@ public class Define
 
     public enum InputDir
     {
-        Left, Right, Up, Down,
+        Left=-1, Right=1, Up=2, Down=-2,
     }
 
     public enum Weapon

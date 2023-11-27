@@ -20,6 +20,8 @@ public class InputManager
     public double LastAngle { get; private set; } = 0;
     // 현재 마우스나 조이스틱 각도
     public double CurrentAngle { get; private set; } = 0;
+
+    public double GunAngle { get; private set; } = 0;
     // 현재 조준 방향
     public Define.InputDir CurrentAimDir { get; private set; } = Define.InputDir.Right;
     // 현재 이동 방향
@@ -87,6 +89,8 @@ public class InputManager
                 // 이 함수는 -π에서 π까지의 범위에서 각도를 반환하므로,
                 // 각도를 0에서 360까지의 범위로 변환하기 위해 180을 더하고 결과에 180을 곱함
                 CurrentAngle = Mathf.Atan2(playerToMouse.x, playerToMouse.y) * Mathf.Rad2Deg;
+
+                GunAngle = Mathf.Atan2(Mathf.Abs(playerToMouse.x), playerToMouse.y) * Mathf.Rad2Deg;
                 if (CurrentAngle < 0) // 각도가 0보다 작으면 360을 더하여 0 ~ 360 범위로 맞춤
                 {
                     CurrentAngle += 360;
