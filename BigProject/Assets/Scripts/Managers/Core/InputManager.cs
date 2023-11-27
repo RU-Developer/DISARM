@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 using UnityEngine.EventSystems;
-using UnityEngine.PlayerLoop;
 
 /**
  * UI이벤트가 아닌 마우스나 키보드의 직접 입력이 발생하는 경우에 대해
