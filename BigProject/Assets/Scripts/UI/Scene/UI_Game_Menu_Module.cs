@@ -41,14 +41,14 @@ public class UI_Game_Menu_Module : UI_Scene
         EquipButtonText
     }
 
-    private void QuitMenu()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Managers.UI.CloseSceneUI<UI_Game_Menu_Module>();
-        Managers.UI.ShowSceneUI<UI_Game>();
-        Managers.Pause.Play();
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+        {
+            Managers.UI.CloseSceneUI<UI_Game_Menu_Module>();
+            Managers.UI.ShowSceneUI<UI_Game>();
+            Managers.Pause.Play();
+        }
     }
 
     public override void Init()
@@ -57,8 +57,6 @@ public class UI_Game_Menu_Module : UI_Scene
         Bind<Text>(typeof(Texts));
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
-
-        Managers.Input.AddUIKeyAction(QuitMenu);
 
         GetObject((int)GameObjects.CollectionMenuHandler).BindEvent(evt =>
         {
@@ -152,6 +150,5 @@ public class UI_Game_Menu_Module : UI_Scene
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(QuitMenu);
     }
 }

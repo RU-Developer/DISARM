@@ -22,7 +22,6 @@ public class WarpPoint : Despawnable
     {
         _player = Managers.Game.GetPlayer();
         Managers.Game.AddPlayerChangedAction(ChangePlayer);
-        Managers.Input.AddKeyAction(Event);
         _eventDistance = 5.0f;
         _updated = false;
 
@@ -56,6 +55,8 @@ public class WarpPoint : Despawnable
 
     private void Update()
     {
+        Event();
+
         if (!_updated)
             return;
 
@@ -66,7 +67,7 @@ public class WarpPoint : Despawnable
 
     private void Event()
     {
-        if (Input.GetKeyDown(KeyCode.Return) == false || _warpPoint == null || _player == null)
+        if (Managers.Input.GetInputDown(Define.InputType.Ok) == false || _warpPoint == null || _player == null)
             return;
 
         float distance = Vector2.Distance(new Vector2(_player.transform.position.x, _player.transform.position.y),
@@ -107,6 +108,5 @@ public class WarpPoint : Despawnable
     public override void Despawn()
     {
         Managers.Game.RemovePlayerChangedAction(ChangePlayer);
-        Managers.Input.RemoveKeyAction(Event);
     }
 }

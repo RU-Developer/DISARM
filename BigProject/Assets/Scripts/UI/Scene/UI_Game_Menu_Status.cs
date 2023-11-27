@@ -10,14 +10,14 @@ public class UI_Game_Menu_Status : UI_Scene
         MenuHandler,
     }
 
-    private void QuitMenu()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
-        Managers.UI.ShowSceneUI<UI_Game>();
-        Managers.Pause.Play();
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+        {
+            Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
+            Managers.UI.ShowSceneUI<UI_Game>();
+            Managers.Pause.Play();
+        }
     }
 
     public override void Init()
@@ -36,13 +36,10 @@ public class UI_Game_Menu_Status : UI_Scene
                 Managers.UI.CloseSceneUI<UI_Game_Menu_Status>();
                 Managers.UI.ShowSceneUI<UI_Game_Menu>();
             });
-
-        Managers.Input.AddUIKeyAction(QuitMenu);
     }
 
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(QuitMenu);
     }
 }

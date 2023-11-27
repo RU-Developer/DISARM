@@ -12,21 +12,19 @@ public class UI_Respawn : UI_Popup
     public override void Init()
     {
         base.Init();
-        Managers.Input.AddUIKeyAction(OnKeyBoard);
         Bind<GameObject>(typeof(GameObjects));
         BindEvent(GetObject((int)GameObjects.ButtonEventHandler), evt => Close());
     }
 
-    private void OnKeyBoard()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Managers.Input.GetInputDown(Define.InputType.Ok))
             Close();
     }
 
     private void Close()
     {
         Managers.Pause.Play();
-        Managers.Input.RemoveUIKeyAction(OnKeyBoard);
         ClosePopupUI();
 
         Managers.Game.Despawn(Managers.Game.GetPlayer());

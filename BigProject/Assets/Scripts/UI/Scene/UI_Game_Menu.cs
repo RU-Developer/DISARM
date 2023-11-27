@@ -19,30 +19,19 @@ public class UI_Game_Menu : UI_Scene
         base.Init();
         Bind<GameObject>(typeof(GameObjects));
         BindEvent(GetObject((int)GameObjects.WeaponMenuHandler),
-            evt =>
-            {
-                Managers.UI.CloseSceneUI<UI_Game_Menu>();
-                Managers.UI.ShowSceneUI<UI_Game_Menu_Weapon>();
-            });
+            evt => WeaponMenu());
 
         BindEvent(GetObject((int)GameObjects.MapMenuHandler),
-            evt =>
-            {
-                Managers.UI.CloseSceneUI<UI_Game_Menu>();
-                Managers.UI.ShowSceneUI<UI_Game_Menu_Map>();
-            });
+            evt => MapMenu());
 
         BindEvent(GetObject((int)GameObjects.GameMenuResumeHandler),
-            evt =>
-            {
-                ResumeGame();
-            });
+            evt => ResumeGame());
 
         BindEvent(GetObject((int)GameObjects.GameMenuOptionsHandler),
-            evt => Debug.Log("Options menu clicked"));
+            evt => Options());
 
         BindEvent(GetObject((int)GameObjects.GameMenuMainHandler),
-            evt => Debug.Log("Go to Main Lobby menu clicked"));
+            evt => GoToMainLobby());
 
         BindEvent(GetObject((int)GameObjects.GameMenuQuitHandler),
             evt =>
@@ -55,16 +44,12 @@ public class UI_Game_Menu : UI_Scene
                 Application.Quit();
             #endif
             });
-
-        Managers.Input.AddUIKeyAction(OnKeyBoard);
     }
 
-    private void OnKeyBoard()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        ResumeGame();
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+            ResumeGame();
     }
 
     private void ResumeGame()
@@ -74,9 +59,30 @@ public class UI_Game_Menu : UI_Scene
         Managers.Pause.Play();
     }
 
+    private void WeaponMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu_Weapon>();
+    }
+
+    private void MapMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu_Map>();
+    }
+
+    private void Options()
+    {
+        Debug.Log("Options menu clicked");
+    }
+
+    private void GoToMainLobby()
+    {
+        Debug.Log("Go to Main Lobby menu clicked");
+    }
+
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(OnKeyBoard);
     }
 }

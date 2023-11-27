@@ -40,16 +40,11 @@ public class UI_Dialog : UI_Scene
 
         foreach (Transform child in _panel.transform)
             Managers.Resource.Destroy(child.gameObject);
-
-        Managers.Input.AddUIKeyAction(OnKeyBoard);
     }
 
-    /**
-     * 키보드 입력 이벤트
-     */
-    private void OnKeyBoard()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        if (Managers.Input.GetInputDown(Define.InputType.Ok))
             ShowNextComment();
 
         Select();
@@ -87,7 +82,7 @@ public class UI_Dialog : UI_Scene
         if (_selections == null || _selections[_select] == null)
             return;
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Managers.Input.GetInputDown(Define.InputType.Up))
         {
             _selections[_select].color = new Color(0, 0, 0);
 
@@ -98,7 +93,7 @@ public class UI_Dialog : UI_Scene
 
             _selections[_select].color = new Color(0, 1, 0);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Managers.Input.GetInputDown(Define.InputType.Down))
         {
             _selections[_select].color = new Color(0, 0, 0);
 
@@ -109,8 +104,6 @@ public class UI_Dialog : UI_Scene
 
             _selections[_select].color = new Color(0, 1, 0);
         }
-
-        
     }
 
     /**
@@ -199,6 +192,5 @@ public class UI_Dialog : UI_Scene
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(OnKeyBoard);
     }
 }

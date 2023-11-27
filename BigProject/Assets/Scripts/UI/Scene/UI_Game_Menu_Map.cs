@@ -25,14 +25,14 @@ public class UI_Game_Menu_Map : UI_Scene
         WeaponIcon
     }
 
-    private void QuitMenu()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
-        Managers.UI.ShowSceneUI<UI_Game>();
-        Managers.Pause.Play();
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+        {
+            Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
+            Managers.UI.ShowSceneUI<UI_Game>();
+            Managers.Pause.Play();
+        }
     }
 
     public override void Init()
@@ -46,8 +46,6 @@ public class UI_Game_Menu_Map : UI_Scene
                 Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
                 Managers.UI.ShowSceneUI<UI_Game_Menu>();
             });
-
-        Managers.Input.AddUIKeyAction(QuitMenu);
 
         if (!Managers.Data.MapItemDict["Twins"].consume)
             return;
@@ -273,6 +271,5 @@ public class UI_Game_Menu_Map : UI_Scene
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(QuitMenu);
     }
 }

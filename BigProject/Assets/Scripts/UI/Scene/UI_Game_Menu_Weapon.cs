@@ -32,14 +32,14 @@ public class UI_Game_Menu_Weapon : UI_Scene
         WeaponSlotIcon
     }
 
-    private void QuitMenu()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Managers.UI.CloseSceneUI<UI_Game_Menu_Weapon>();
-        Managers.UI.ShowSceneUI<UI_Game>();
-        Managers.Pause.Play();
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+        {
+            Managers.UI.CloseSceneUI<UI_Game_Menu_Weapon>();
+            Managers.UI.ShowSceneUI<UI_Game>();
+            Managers.Pause.Play();
+        }
     }
 
     public override void Init()
@@ -77,8 +77,6 @@ public class UI_Game_Menu_Weapon : UI_Scene
 
                 Refresh();
             });
-
-        Managers.Input.AddUIKeyAction(QuitMenu);
 
         _player = Managers.Game.GetPlayer();
         _weapons = GetObject((int)GameObjects.Weapons);
@@ -139,6 +137,5 @@ public class UI_Game_Menu_Weapon : UI_Scene
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(QuitMenu);
     }
 }

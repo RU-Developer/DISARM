@@ -13,16 +13,6 @@ public class UI_Shop : UI_Scene
     private int _memory = 0;
     private GameObject _itemPanel;
 
-    private void QuitMenu()
-    {
-        if (!Input.GetKeyDown(KeyCode.Escape))
-            return;
-
-        Managers.UI.CloseSceneUI<UI_Shop>();
-        Managers.UI.ShowSceneUI<UI_Game>();
-        Managers.Pause.Play();
-    }
-
     enum GameObjects
     {
         PurchaseEventHandler,
@@ -43,14 +33,25 @@ public class UI_Shop : UI_Scene
         ItemMemoryText
     }
 
+    private void Update()
+    {
+        if (Managers.Input.GetInputDown(Define.InputType.Menu))
+            QuitMenu();
+    }
+
+    private void QuitMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Shop>();
+        Managers.UI.ShowSceneUI<UI_Game>();
+        Managers.Pause.Play();
+    }
+
     public override void Init()
     {
         base.Init();
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
-
-        Managers.Input.AddUIKeyAction(QuitMenu);
 
         BindEvent(GetObject((int)GameObjects.PurchaseEventHandler), evt =>
         {
@@ -74,10 +75,8 @@ public class UI_Shop : UI_Scene
             Refresh();
         });
 
-        BindEvent(GetObject((int)GameObjects.QuitEventHandler), evt =>
-        {
-            QuitMenu();
-        });
+        BindEvent(GetObject((int)GameObjects.QuitEventHandler),
+            evt => QuitMenu());
 
         _itemPanel = GetObject((int)GameObjects.ItemPanel);
 
@@ -124,6 +123,5 @@ public class UI_Shop : UI_Scene
     public override void Clear()
     {
         base.Clear();
-        Managers.Input.RemoveUIKeyAction(QuitMenu);
     }
 }

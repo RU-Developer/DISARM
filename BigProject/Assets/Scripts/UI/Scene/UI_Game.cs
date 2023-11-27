@@ -26,9 +26,6 @@ public class UI_Game : UI_Scene
         Bind<Image>(typeof(Images));
         Bind<GameObject>(typeof(GameObjects));
 
-        Managers.Input.AddKeyAction(OpenMenu);
-
-
         Image weapon = GetImage((int)Images.WeaponIcon);
         switch (Managers.Data.PlayerStatusDict["saved"].weapon)
         {
@@ -45,9 +42,9 @@ public class UI_Game : UI_Scene
         GetObject((int)GameObjects.ParrySkillCoolTimer).GetComponent<UI_Cool_Time_Slider>().SetSkill("parry");
     }
 
-    private void OpenMenu()
+    private void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.Escape))
+        if (Managers.Input.GetInputDown(Define.InputType.Menu) == false)
             return;
 
         if (Managers.Pause.IsPause)
@@ -65,7 +62,5 @@ public class UI_Game : UI_Scene
         base.Clear();
         GetObject((int)GameObjects.UI_Game_Hp)?
             .GetComponent<UI_Game_Hp>()?.Clear();
-
-        Managers.Input.RemoveKeyAction(OpenMenu);
     }
 }
