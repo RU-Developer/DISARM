@@ -191,10 +191,14 @@ public class PlayerController : BaseController
 
         //horizontal값을 이동 관련 변수로 사용
         //땅에 있을 때와 공중에 있을 때 이동속도가 다름.
+        /*
         horizontal = Input.GetAxisRaw("Horizontal");
+        */
+        horizontal = (Managers.Input.GetInput(Define.InputType.Right)||
+            Managers.Input.GetInput(Define.InputType.Left)) ?1:0;
 
         if (!isWallFront && Mathf.Abs(horizontal) > 0)
-            xspeed = dir * 0.08f;
+            xspeed = (int)Managers.Input.CurrentMoveDir * 0.08f;
         else
             xspeed = 0;
             
@@ -212,7 +216,7 @@ public class PlayerController : BaseController
         if (canClimbLedge || isFix || isWallJump || !isGrounded) return;
         //경사로를 밟았을 때 그 방향으로 미끄러지고 점프만 할 수 있음.
         //gravityScale을 올리면 방향을 따로 지정할 필요 없으므로 그렇게 쓴다.
-        if (isSlope && Input.GetAxis("Jump") == 0)
+        if (isSlope && Managers.Input.GetInputDown(Define.InputType.Jump))
         {
             fixFlip = true;
             rigid.gravityScale = 10f;
@@ -235,14 +239,12 @@ public class PlayerController : BaseController
 
         //플레이어 스프라이트 좌우 반전
         //dir변수는 보고 있는 방향. 1이면 오른쪽, -1이면 왼쪽
-        if (horizontal > 0 || (isSlope && rigid.velocity.x > 0))
+        if ((int)Managers.Input.CurrentMoveDir > 0 || (isSlope && rigid.velocity.x > 0))
         {
-            dir = 1;
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
-        else if (horizontal < 0 || (isSlope && rigid.velocity.x < 0))
+        else if ((int)Managers.Input.CurrentMoveDir < 0 || (isSlope && rigid.velocity.x < 0))
         {
-            dir = -1;
             transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
         }
 
@@ -250,9 +252,9 @@ public class PlayerController : BaseController
 
     void Jump()
     {
-        if (isRoll || isFix || canClimbLedge || !isGrounded || isWallJump) return;
+        if (isRoll || isFix || canClimbLedge || isWallJump) return;
         //점프 키를 누르고, jumpCount가 0이면 점프
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCount == 0)
+        if (Managers.Input.GetInputDown(Define.InputType.Jump) && jumpCount == 0)
         {
             Debug.Log("jump");
             Managers.Sound.Play("player_jump");
@@ -260,12 +262,13 @@ public class PlayerController : BaseController
             rigid.velocity = new Vector2(rigid.velocity.x, 0);
             rigid.AddForce(Vector2.up * jumpForce * 0.9f, ForceMode2D.Impulse);
         }
-        
-        if (Input.GetKeyUp(KeyCode.Space) && rigid.velocity.y > 0)
+        //점프 높이조절
+        if (Managers.Input.GetInputUp(Define.InputType.Jump) && rigid.velocity.y > 0)
         {
             Debug.Log("jump velocity / 2");
-            rigid.velocity /= 2;
+            rigid.velocity = new Vector2(rigid.velocity.x, rigid.velocity.y * 0.5f);
         }
+
 
         if (isGrounded && rigid.velocity.y < -1f)
             Invoke("GroundParticle", 0.5f);
@@ -301,7 +304,7 @@ public class PlayerController : BaseController
         if ((isWallRight || isWallLeft) && rigid.velocity.y < 0)
         {
             isWallJump = false;
-            if (Input.GetKeyDown(KeyCode.Space) && !fixFlip)
+            if (Managers.Input.GetInputDown(Define.InputType.Jump) && !fixFlip)
             {
                 fixFlip = true;
                 if (!isWallJump && !isGrounded && horizontal != 0)
@@ -333,7 +336,7 @@ public class PlayerController : BaseController
         //animation이 하나이므로, 팔 부분은 비활성화한다
         //animation은 땅에 닿을 때 까지 진행되지 않는다.
         //그리고 땅에 닿을 때 까지 아무런 행동도 할 수 없다.
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !isRoll && Managers.Skill.UseSkill("dive") && !isWallFront)
+        if (Managers.Input.GetInputDown(Define.InputType.Skill1) && !isRoll && Managers.Skill.UseSkill("dive") && !isWallFront)
         {
             isRoll = true;
             fixFlip = true;
@@ -341,8 +344,7 @@ public class PlayerController : BaseController
             Managers.Sound.Play("player_jump");
             ((BoxCollider2D)coll).size = new Vector3(0.5f, 0.5f, 1f);
             rigid.velocity = Vector2.zero;
-            rigid.AddForce(new Vector2(0, 6f), ForceMode2D.Impulse);
-            StartCoroutine(forceX(dir * 0.1f, 0.6f));
+            StartCoroutine(forceX((int)Managers.Input.CurrentMoveDir * 0.15f, 0.6f));
             leftArm.SetActive(false);
             rightArm.SetActive(false);
             head.SetActive(false);
@@ -354,8 +356,7 @@ public class PlayerController : BaseController
         {
             xspeed = 0;
             rigid.velocity = Vector2.zero;
-            rigid.AddForce(new Vector2(0, -3f), ForceMode2D.Impulse);
-            StartCoroutine(forceX(dir * -0.04f, 0.6f));
+            StartCoroutine(forceX((int)Managers.Input.CurrentMoveDir * -0.04f, 0.6f));
         }
         if (isRoll && isGrounded) animator.speed = 1;
     }
@@ -429,7 +430,7 @@ public class PlayerController : BaseController
             animator.SetBool("isJump", false);
         }
 
-        
+
     }
 
     public override void OnDeSpawn()

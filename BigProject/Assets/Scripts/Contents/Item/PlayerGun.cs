@@ -40,9 +40,6 @@ public class PlayerGun : Despawnable
         leftArm = gameObject.FindChild("leftArm");
         rightArm = gameObject.FindChild("rightArm");
 
-        melee = leftArm.GetComponent<MeleeAttack>();
-
-
         status = GetComponent<PlayerStatus>();
         weapon = status.Weapon;
         status.AddWeaponChangedAction(OnWeaponChanged);
@@ -68,19 +65,11 @@ public class PlayerGun : Despawnable
     {
         Melee();
 
-        dir = GetComponent<PlayerController>().dir;
+        dir = (int)Managers.Input.CurrentMoveDir;
 
         mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if(dir>0)
-            angle = Mathf.Atan2(mouse.y - transform.position.y,
-            Mathf.Abs(mouse.x - transform.position.x) * dir) * Mathf.Rad2Deg;
-        else if (dir < 0)
-            angle = 180-Mathf.Atan2(transform.position.y - mouse.y,
-            Mathf.Abs(mouse.x - transform.position.x) * dir) * Mathf.Rad2Deg;
-
-        gunAngle = Mathf.Atan2(mouse.y - transform.position.y,
-            Mathf.Abs(mouse.x - transform.position.x) * dir) * Mathf.Rad2Deg;
+        angle = (90 - (float)Managers.Input.GunAngle) * (int)Managers.Input.CurrentMoveDir;
     }
 
     private void FixedUpdate()
