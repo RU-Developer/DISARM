@@ -17,6 +17,8 @@ public class SavePoint : Despawnable
 
     private void Update()
     {
+        if (Managers.Pause.IsPause)
+            return;
         if (Managers.Input.GetInputDown(Define.InputType.Ok) == false || _player == null)
             return;
 

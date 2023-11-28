@@ -64,8 +64,8 @@ public class InputManager
     // 조이스틱의 x, y값을 각도로 변환하는 함수
     double JoystickToAngle(int x, int y)
     {
-        // x, y값이 500 ~ 550 사이면 조이스틱이 움직이지 않은 것으로 판단하고 이전 값을 반환
-        if (x >= 500 && x <= 550 && y >= 500 && y <= 550)
+        // x, y값이 480 ~ 550 사이면 조이스틱이 움직이지 않은 것으로 판단하고 이전 값을 반환
+        if (x >= 480 && x <= 550 && y >= 480 && y <= 550)
         {
             _joyStickPressed = true;
             return CurrentAngle;
