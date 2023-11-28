@@ -34,8 +34,6 @@ public class PlayerGun : Despawnable
             return;
 
         canShoot = true;
-        Managers.Input.AddKeyAction(OnKeyBoard);
-        Managers.Input.AddMouseAction(OnMouseClick);
 
         leftArm = gameObject.FindChild("leftArm");
         rightArm = gameObject.FindChild("rightArm");
@@ -51,19 +49,10 @@ public class PlayerGun : Despawnable
         weapon = status.Weapon;
     }
 
-    private void OnKeyBoard()
-    {
-        Fire();
-    }
-
-    private void OnMouseClick(Define.MouseEvent evt)
-    {
-        Fire();
-    }
-
     void Update()
     {
         Melee();
+        Fire();
 
         dir = (int)Managers.Input.CurrentMoveDir;
 
@@ -79,15 +68,16 @@ public class PlayerGun : Despawnable
     }
     private void Melee()
     {
-        if (!Managers.Data.MapItemDict["Parry"].consume)
+        if (Managers.Data.MapItemDict["Parry"].consume == false)
             return;
 
-        if (Input.GetMouseButton(0) && EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+        // UI에 마우스 포인터가 위치해 있으면 UI 이벤트 우선
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
             return;
 
         attackTime -= Time.deltaTime;
 
-        if (Input.GetMouseButtonDown(0) && Managers.Skill.CanUseSkill("parry") && attackTime < 0)
+        if (Managers.Input.GetInputDown(Define.InputType.Skill2) && Managers.Skill.CanUseSkill("parry") && attackTime < 0)
         {
             meleeAngle = angle;
             attackTime = 0.5f;
@@ -121,10 +111,12 @@ public class PlayerGun : Despawnable
 
     private void Fire()
     {
-        if (Input.GetMouseButtonDown(0))
+        // 패링 시전 중에는 금지
+        if (Managers.Input.GetInputDown(Define.InputType.Skill2))
             return;
 
-        if (Input.GetMouseButtonDown(1) && canShoot)
+        // 발사 버튼 눌림
+        if (Managers.Input.GetInputDown(Define.InputType.Attack) && canShoot)
         {
             switch (weapon)
             {
@@ -154,7 +146,5 @@ public class PlayerGun : Despawnable
     {
         if (status != null)
             status.RemoveWeaponChangedAction(OnWeaponChanged);
-        Managers.Input.RemoveKeyAction(OnKeyBoard);
-        Managers.Input.RemoveMouseAction(OnMouseClick);
     }
 }

@@ -84,6 +84,9 @@ public class InputManager
         // 각도를 반시계 방향으로 90도 회전시킴
         CurrentAngle = (CurrentAngle + 270) % 360;
 
+        Vector2 joystickVector = new Vector2(x - 512, 512 - y);
+        GunAngle = Math.Atan2(Math.Abs(joystickVector.x), joystickVector.y) * 180 / Math.PI;
+
         // TODO: GunAngle 넣어줘야 함
         return CurrentAngle;
     }
