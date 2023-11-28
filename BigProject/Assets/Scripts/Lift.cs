@@ -77,13 +77,13 @@ public class Lift : MonoBehaviour
             player = collision.gameObject.GetComponent<PlayerController>();
             if (canLift)
             {
-                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y > player.transform.position.y+1 && upward)
+                if ((Managers.Input.CurrentAngle < 90 || Managers.Input.CurrentAngle > 270) && upward)
                 {
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;
                     canLift = false;
                 }
-                if (Camera.main.ScreenToWorldPoint(Input.mousePosition).y < player.transform.position.y-1 && !upward)
+                if ((Managers.Input.CurrentAngle > 90 && Managers.Input.CurrentAngle < 270) && !upward)
                 {
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;

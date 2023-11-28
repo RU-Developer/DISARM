@@ -73,7 +73,8 @@ public class MapItem : MonoBehaviour
 
     private void Update()
     {
-        OnGet();
+        if (Managers.Pause.IsPause == false)
+            OnGet();
 
         if (!_updated)
             return;

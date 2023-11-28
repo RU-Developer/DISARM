@@ -55,7 +55,8 @@ public class WarpPoint : Despawnable
 
     private void Update()
     {
-        Event();
+        if (Managers.Pause.IsPause == false)
+            Event();
 
         if (!_updated)
             return;

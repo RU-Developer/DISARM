@@ -26,6 +26,8 @@ public class UI_Dialog : UI_Scene
     private int _select;
     private List<Text> _selections = new List<Text>();
 
+    private bool _isDialogEnded = false;
+
     public override void Init()
     {
         if (_comment != null)
@@ -44,6 +46,9 @@ public class UI_Dialog : UI_Scene
 
     private void Update()
     {
+        if (_isDialogEnded)
+            return;
+
         if (Managers.Input.GetInputDown(Define.InputType.Ok))
             ShowNextComment();
 
@@ -79,7 +84,7 @@ public class UI_Dialog : UI_Scene
      */
     private void Select()
     {
-        if (_selections == null || _selections[_select] == null)
+        if (_selections == null || _selections.Count == 0 || _select < 0 || _select > _selections.Count || _selections[_select] == null)
             return;
 
         if (Managers.Input.GetInputDown(Define.InputType.Up))
@@ -114,6 +119,7 @@ public class UI_Dialog : UI_Scene
         // 다음 스크립트 없으면 다이얼로그 종료
         if (_currentScript == null)
         {
+            _isDialogEnded = true;
             Managers.UI.CloseSceneUI<UI_Dialog>();
             Managers.Pause.Play();
             return;
@@ -164,6 +170,7 @@ public class UI_Dialog : UI_Scene
         //TODO: 다이얼로그에서 마지막에 특정 함수를 호출하는 경우 지정. link의 시작에 //가 들어갈 경우 그 뒤는 함수명
         if (string.IsNullOrEmpty(next) == false && next.StartsWith("//"))
         {
+            _isDialogEnded = true;
             Managers.UI.CloseSceneUI<UI_Dialog>();
             Managers.Pause.Play();
             DialogFunctions.Invoke($"{next.Substring(2)}");
@@ -172,6 +179,7 @@ public class UI_Dialog : UI_Scene
 
         if (string.IsNullOrEmpty(next))
         {
+            _isDialogEnded = true;
             AddComment(null);
             ShowComment();
             return;
