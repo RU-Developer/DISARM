@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_Game_Menu : UI_Scene
 {
@@ -13,6 +14,8 @@ public class UI_Game_Menu : UI_Scene
         GameMenuMainHandler,
         GameMenuQuitHandler,
     }
+
+    private GameObjects _state = GameObjects.GameMenuResumeHandler;
 
     public override void Init()
     {
@@ -34,22 +37,86 @@ public class UI_Game_Menu : UI_Scene
             evt => GoToMainLobby());
 
         BindEvent(GetObject((int)GameObjects.GameMenuQuitHandler),
-            evt =>
-            {
-            #if UNITY_EDITOR
-                // Application.Quit() does not work in the editor so
-                // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
-                UnityEditor.EditorApplication.isPlaying = false;
-            #else
-                Application.Quit();
-            #endif
-            });
+            evt => Quit());
+
+        SetState(GameObjects.GameMenuResumeHandler);
+    }
+
+    private void SetState(GameObjects state)
+    {
+        GetObject((int)_state).GetComponent<Image>().color = new Color(255, 255, 255, 0);
+        _state = state;
+        GetObject((int)_state).GetComponent<Image>().color = new Color(255, 255, 255, 20);
     }
 
     private void Update()
     {
+        if (Managers.Pause.IsPause == false)
+            return;
+
         if (Managers.Input.GetInputDown(Define.InputType.Menu))
             ResumeGame();
+
+        switch (_state)
+        {
+            case GameObjects.GameMenuResumeHandler:
+                if (Managers.Input.GetInputDown(Define.InputType.Ok))
+                    ResumeGame();
+                else if (Managers.Input.GetInputDown(Define.InputType.Up))
+                    SetState(GameObjects.GameMenuQuitHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Down))
+                    SetState(GameObjects.GameMenuOptionsHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Left))
+                    WeaponMenu();
+                else if (Managers.Input.GetInputDown(Define.InputType.Right))
+                    MapMenu();
+                break;
+            case GameObjects.GameMenuOptionsHandler:
+                if (Managers.Input.GetInputDown(Define.InputType.Ok))
+                    Options();
+                else if (Managers.Input.GetInputDown(Define.InputType.Up))
+                    SetState(GameObjects.GameMenuResumeHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Down))
+                    SetState(GameObjects.GameMenuMainHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Left))
+                    WeaponMenu();
+                else if (Managers.Input.GetInputDown(Define.InputType.Right))
+                    MapMenu();
+                break;
+            case GameObjects.GameMenuMainHandler:
+                if (Managers.Input.GetInputDown(Define.InputType.Ok))
+                    GoToMainLobby();
+                else if (Managers.Input.GetInputDown(Define.InputType.Up))
+                    SetState(GameObjects.GameMenuOptionsHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Down))
+                    SetState(GameObjects.GameMenuQuitHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Left))
+                    WeaponMenu();
+                else if (Managers.Input.GetInputDown(Define.InputType.Right))
+                    MapMenu();
+                break;
+            case GameObjects.GameMenuQuitHandler:
+                if (Managers.Input.GetInputDown(Define.InputType.Ok))
+                    Quit();
+                else if (Managers.Input.GetInputDown(Define.InputType.Up))
+                    SetState(GameObjects.GameMenuMainHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Down))
+                    SetState(GameObjects.GameMenuResumeHandler);
+                else if (Managers.Input.GetInputDown(Define.InputType.Left))
+                    WeaponMenu();
+                else if (Managers.Input.GetInputDown(Define.InputType.Right))
+                    MapMenu();
+                break;
+        }
+    }
+
+    private void Quit()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                 Application.Quit();
+        #endif
     }
 
     private void ResumeGame()

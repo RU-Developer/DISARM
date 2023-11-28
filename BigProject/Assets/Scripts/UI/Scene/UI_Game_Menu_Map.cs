@@ -27,12 +27,24 @@ public class UI_Game_Menu_Map : UI_Scene
 
     private void Update()
     {
+        if (Managers.Pause.IsPause == false)
+            return;
+
         if (Managers.Input.GetInputDown(Define.InputType.Menu))
         {
             Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
             Managers.UI.ShowSceneUI<UI_Game>();
             Managers.Pause.Play();
         }
+
+        if (Managers.Input.GetInputDown(Define.InputType.Left))
+            MainMenu();
+    }
+
+    private void MainMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu>();
     }
 
     public override void Init()
@@ -41,11 +53,7 @@ public class UI_Game_Menu_Map : UI_Scene
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         BindEvent(GetObject((int)GameObjects.MenuMenuHandler),
-            evt =>
-            {
-                Managers.UI.CloseSceneUI<UI_Game_Menu_Map>();
-                Managers.UI.ShowSceneUI<UI_Game_Menu>();
-            });
+            evt => MainMenu());
 
         if (!Managers.Data.MapItemDict["Twins"].consume)
             return;

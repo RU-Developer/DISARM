@@ -71,8 +71,10 @@ public class InputManager
             return CurrentAngle;
         }
 
+        _joyStickPressed = false;
+
         // x, y값을 double로 형변환하고, Math.Atan2 함수를 이용하여 라디안 값을 구함
-        double radian = Math.Atan2(512 - (double)y, (double)x - 512);
+        double radian = Math.Atan2((double)x - 512, 512 - (double)y); // 인자를 바꿉니다.
 
         // 라디안 값을 각도로 변환하고, 0 ~ 360 범위로 맞춤
         CurrentAngle = radian * 180 / Math.PI;
@@ -81,13 +83,9 @@ public class InputManager
             CurrentAngle += 360;
         }
 
-        // 각도를 반시계 방향으로 90도 회전시킴
-        CurrentAngle = (CurrentAngle + 270) % 360;
-
         Vector2 joystickVector = new Vector2(x - 512, 512 - y);
         GunAngle = Math.Atan2(Math.Abs(joystickVector.x), joystickVector.y) * 180 / Math.PI;
 
-        // TODO: GunAngle 넣어줘야 함
         return CurrentAngle;
     }
 
@@ -444,10 +442,18 @@ public class InputManager
                 if (CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315)
                 {
                     // 안눌리고 있었으면
-                    if (_inputMap[(int)Define.InputType.Up] == false)
+                    if (_joyStickPressed && _inputMap[(int)Define.InputType.Up] == false)
                     {
+                        Debug.Log("Up Down");
                         _inputDownMap[(int)Define.InputType.Up] = true;
                         _inputMap[(int)Define.InputType.Up] = true;
+                    }
+                    // 눌렀다가 때는 경우
+                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Up])
+                    {
+                        Debug.Log("Up up");
+                        _inputMap[(int)Define.InputType.Up] = false;
+                        _inputUpMap[(int)Define.InputType.Up] = true;
                     }
                 }
                 else
@@ -455,19 +461,26 @@ public class InputManager
                     // 눌렀다가 때는 경우
                     if (_inputMap[(int)Define.InputType.Up])
                     {
+                        Debug.Log("Up up");
                         _inputMap[(int)Define.InputType.Up] = false;
                         _inputUpMap[(int)Define.InputType.Up] = true;
                     }
                 }
                 #endregion
                 #region InputType Right
-                if (CurrentAngle >= 45 && CurrentAngle < 135 && _joyStickPressed)
+                if (CurrentAngle >= 45 && CurrentAngle < 135)
                 {
                     // 안눌리고 있었으면
-                    if (_inputMap[(int)Define.InputType.Right] == false)
+                    if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Right] == false)
                     {
                         _inputDownMap[(int)Define.InputType.Right] = true;
                         _inputMap[(int)Define.InputType.Right] = true;
+                    }
+                    // 눌렀다가 때는 경우
+                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Right])
+                    {
+                        _inputMap[(int)Define.InputType.Right] = false;
+                        _inputUpMap[(int)Define.InputType.Right] = true;
                     }
                 }
                 else
@@ -481,13 +494,19 @@ public class InputManager
                 }
                 #endregion
                 #region InputType Down
-                if (CurrentAngle >= 135 && CurrentAngle < 225 && _joyStickPressed)
+                if (CurrentAngle >= 135 && CurrentAngle < 225)
                 {
                     // 안눌리고 있었으면
-                    if (_inputMap[(int)Define.InputType.Down] == false)
+                    if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Down] == false)
                     {
                         _inputDownMap[(int)Define.InputType.Down] = true;
                         _inputMap[(int)Define.InputType.Down] = true;
+                    }
+                    // 눌렀다가 때는 경우
+                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Down])
+                    {
+                        _inputMap[(int)Define.InputType.Down] = false;
+                        _inputUpMap[(int)Define.InputType.Down] = true;
                     }
                 }
                 else
@@ -501,13 +520,19 @@ public class InputManager
                 }
                 #endregion
                 #region InputType Left
-                if (CurrentAngle >= 225 && CurrentAngle < 360 && _joyStickPressed)
+                if (CurrentAngle >= 225 && CurrentAngle < 360)
                 {
                     // 안눌리고 있었으면
-                    if (_inputMap[(int)Define.InputType.Left] == false)
+                    if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Left] == false)
                     {
                         _inputDownMap[(int)Define.InputType.Left] = true;
                         _inputMap[(int)Define.InputType.Left] = true;
+                    }
+                    // 눌렀다가 때는 경우
+                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Left])
+                    {
+                        _inputMap[(int)Define.InputType.Left] = false;
+                        _inputUpMap[(int)Define.InputType.Left] = true;
                     }
                 }
                 else
