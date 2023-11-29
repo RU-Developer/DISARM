@@ -442,14 +442,14 @@ public class InputManager
                 if (CurrentAngle >= 0 && CurrentAngle < 45 || CurrentAngle >= 315)
                 {
                     // 안눌리고 있었으면
-                    if (_joyStickPressed && _inputMap[(int)Define.InputType.Up] == false)
+                    if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Up] == false)
                     {
                         Debug.Log("Up Down");
                         _inputDownMap[(int)Define.InputType.Up] = true;
                         _inputMap[(int)Define.InputType.Up] = true;
                     }
                     // 눌렀다가 때는 경우
-                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Up])
+                    else if (_joyStickPressed && _inputMap[(int)Define.InputType.Up])
                     {
                         Debug.Log("Up up");
                         _inputMap[(int)Define.InputType.Up] = false;
@@ -477,7 +477,7 @@ public class InputManager
                         _inputMap[(int)Define.InputType.Right] = true;
                     }
                     // 눌렀다가 때는 경우
-                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Right])
+                    else if (_joyStickPressed && _inputMap[(int)Define.InputType.Right])
                     {
                         _inputMap[(int)Define.InputType.Right] = false;
                         _inputUpMap[(int)Define.InputType.Right] = true;
@@ -503,7 +503,7 @@ public class InputManager
                         _inputMap[(int)Define.InputType.Down] = true;
                     }
                     // 눌렀다가 때는 경우
-                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Down])
+                    else if (_joyStickPressed && _inputMap[(int)Define.InputType.Down])
                     {
                         _inputMap[(int)Define.InputType.Down] = false;
                         _inputUpMap[(int)Define.InputType.Down] = true;
@@ -529,7 +529,7 @@ public class InputManager
                         _inputMap[(int)Define.InputType.Left] = true;
                     }
                     // 눌렀다가 때는 경우
-                    else if (_joyStickPressed == false && _inputMap[(int)Define.InputType.Left])
+                    else if (_joyStickPressed && _inputMap[(int)Define.InputType.Left])
                     {
                         _inputMap[(int)Define.InputType.Left] = false;
                         _inputUpMap[(int)Define.InputType.Left] = true;
