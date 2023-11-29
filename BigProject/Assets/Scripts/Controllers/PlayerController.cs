@@ -39,10 +39,11 @@ public class PlayerController : BaseController
 
     //여러 기능과 관련된 조건
     private bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
-        isGrounded = false, isWallJump = false, isRoll = false, fixFlip = false;
+        isWallJump = false, isRoll = false, fixFlip = false;
+    public bool isGrounded{ private set; get; }
 
-    //절벽 잡기 시 위치 정보를 저장
-    [Header("Ledge info")]
+//절벽 잡기 시 위치 정보를 저장
+[Header("Ledge info")]
     [SerializeField] Vector2 offset1;
     [SerializeField] Vector2 offset2;
     Vector2 climbBegunPosition;
@@ -58,7 +59,8 @@ public class PlayerController : BaseController
         slopeMask = LayerMask.GetMask("Slope");
 
         //점프,벽 점프,구르기 크기
-        jumpForce = 13;
+        jumpForce = 14;
+        isGrounded = false;
 
         //절벽 확인하는 gameObject저장
         ledgeCheck = gameObject.FindChild<Transform>("ledgeCheck");
@@ -293,7 +295,7 @@ public class PlayerController : BaseController
         //벽 점프시 어느 정도의 관성이 주어져서 한 벽만 탈 수는 없다.
         float scale = 0f;
 
-        if(isWallRight)
+        if (isWallRight)
             scale = -1f;
         if (isWallLeft)
             scale = 1f;
@@ -309,7 +311,7 @@ public class PlayerController : BaseController
                 {
                     isWallJump = true;
                     rigid.velocity = Vector2.zero;
-                    StartCoroutine(forceX(scale* 0.08f, 0.4f));
+                    StartCoroutine(forceX(scale* 0.12f, 0.4f));
                     rigid.velocity = new Vector2(rigid.velocity.x, jumpForce * 0.5f);
 
                     Managers.Sound.Play("player_jump");
@@ -396,8 +398,8 @@ public class PlayerController : BaseController
         isLedge = !Physics2D.Raycast(ledgeCheck.position, Vector2.right*Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, groundMask) && !isWallUp &&
             Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), Vector2.right * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, platformMask);
         isWallFront = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), new Vector2(Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0), 0.4f, platformMask);
-        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.8f, platformMask);
-        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.8f, platformMask);
+        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.6f, platformMask);
+        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.6f, platformMask);
         isWallUp = Physics2D.Raycast(transform.position, Vector2.up, 0.8f, groundMask);
         isSlope = Physics2D.Raycast(transform.position, Vector2.down, 1f, slopeMask);
 

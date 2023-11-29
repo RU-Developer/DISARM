@@ -342,9 +342,7 @@ public class InputManager
             #endregion
 
             #region InputType Attack
-            // UI 위가 아닌 곳에 마우스가 있을때
-            if (EventSystem.current == null || EventSystem.current.IsPointerOverGameObject() == false)
-            {
+
                 if (Input.GetMouseButton(1)) // 우클릭
                 {
                     // 안눌리고 있었으면
@@ -363,7 +361,6 @@ public class InputManager
                         _inputUpMap[(int)Define.InputType.Attack] = true;
                     }
                 }
-            } 
             #endregion
             #region InputType Jump
             if (Input.GetKey(KeyCode.Space))
