@@ -43,12 +43,23 @@ public class UI_Game_Menu_Module : UI_Scene
 
     private void Update()
     {
+        if (Managers.Pause.IsPause == false)
+            return;
+
         if (Managers.Input.GetInputDown(Define.InputType.Menu))
         {
             Managers.UI.CloseSceneUI<UI_Game_Menu_Module>();
             Managers.UI.ShowSceneUI<UI_Game>();
             Managers.Pause.Play();
         }
+        else if (Managers.Input.GetInputDown(Define.InputType.Right))
+            CollectionMenu();
+    }
+
+    private void CollectionMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu_Module>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu_Collection>();
     }
 
     public override void Init()
@@ -58,11 +69,8 @@ public class UI_Game_Menu_Module : UI_Scene
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
 
-        GetObject((int)GameObjects.CollectionMenuHandler).BindEvent(evt =>
-        {
-            Managers.UI.CloseSceneUI<UI_Game_Menu_Module>();
-            Managers.UI.ShowSceneUI<UI_Game_Menu_Collection>();
-        });
+        GetObject((int)GameObjects.CollectionMenuHandler).BindEvent(
+            evt => CollectionMenu());
 
         GetObject((int)GameObjects.EquipButtonEventHandler).BindEvent(evt =>
         {

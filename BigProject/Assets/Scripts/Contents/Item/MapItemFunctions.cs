@@ -31,6 +31,7 @@ public class MapItemFunctions
     private static void DartGun()
     {
         Managers.Data.WeaponDict["DartGun"].own = true;
+        Managers.Game.GetPlayer()?.GetComponent<PlayerStatus>().ChangeWeapon("DartGun");
     }
 
     #endregion

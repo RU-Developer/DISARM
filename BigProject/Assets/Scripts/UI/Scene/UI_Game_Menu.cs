@@ -7,7 +7,7 @@ public class UI_Game_Menu : UI_Scene
 {
     enum GameObjects
     {
-        WeaponMenuHandler,
+        CollectionMenuHandler,
         MapMenuHandler,
         GameMenuResumeHandler,
         GameMenuOptionsHandler,
@@ -21,8 +21,8 @@ public class UI_Game_Menu : UI_Scene
     {
         base.Init();
         Bind<GameObject>(typeof(GameObjects));
-        BindEvent(GetObject((int)GameObjects.WeaponMenuHandler),
-            evt => WeaponMenu());
+        BindEvent(GetObject((int)GameObjects.CollectionMenuHandler),
+            evt => CollectionMenu());
 
         BindEvent(GetObject((int)GameObjects.MapMenuHandler),
             evt => MapMenu());
@@ -67,7 +67,7 @@ public class UI_Game_Menu : UI_Scene
                 else if (Managers.Input.GetInputDown(Define.InputType.Down))
                     SetState(GameObjects.GameMenuOptionsHandler);
                 else if (Managers.Input.GetInputDown(Define.InputType.Left))
-                    WeaponMenu();
+                    CollectionMenu();
                 else if (Managers.Input.GetInputDown(Define.InputType.Right))
                     MapMenu();
                 break;
@@ -79,7 +79,7 @@ public class UI_Game_Menu : UI_Scene
                 else if (Managers.Input.GetInputDown(Define.InputType.Down))
                     SetState(GameObjects.GameMenuMainHandler);
                 else if (Managers.Input.GetInputDown(Define.InputType.Left))
-                    WeaponMenu();
+                    CollectionMenu();
                 else if (Managers.Input.GetInputDown(Define.InputType.Right))
                     MapMenu();
                 break;
@@ -91,7 +91,7 @@ public class UI_Game_Menu : UI_Scene
                 else if (Managers.Input.GetInputDown(Define.InputType.Down))
                     SetState(GameObjects.GameMenuQuitHandler);
                 else if (Managers.Input.GetInputDown(Define.InputType.Left))
-                    WeaponMenu();
+                    CollectionMenu();
                 else if (Managers.Input.GetInputDown(Define.InputType.Right))
                     MapMenu();
                 break;
@@ -103,7 +103,7 @@ public class UI_Game_Menu : UI_Scene
                 else if (Managers.Input.GetInputDown(Define.InputType.Down))
                     SetState(GameObjects.GameMenuResumeHandler);
                 else if (Managers.Input.GetInputDown(Define.InputType.Left))
-                    WeaponMenu();
+                    CollectionMenu();
                 else if (Managers.Input.GetInputDown(Define.InputType.Right))
                     MapMenu();
                 break;
@@ -126,10 +126,10 @@ public class UI_Game_Menu : UI_Scene
         Managers.Pause.Play();
     }
 
-    private void WeaponMenu()
+    private void CollectionMenu()
     {
         Managers.UI.CloseSceneUI<UI_Game_Menu>();
-        Managers.UI.ShowSceneUI<UI_Game_Menu_Weapon>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu_Collection>();
     }
 
     private void MapMenu()

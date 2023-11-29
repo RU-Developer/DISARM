@@ -8,7 +8,7 @@ public class UI_Game_Menu_Collection : UI_Scene
     enum GameObjects
     {
         ModuleMenuHandler,
-        WeaponMenuHandler,
+        MenuMenuHandler,
         Items
     }
 
@@ -34,32 +34,43 @@ public class UI_Game_Menu_Collection : UI_Scene
         Bind<Text>(typeof(Texts));
 
         BindEvent(GetObject((int)GameObjects.ModuleMenuHandler),
-            evt =>
-            {
-                Managers.UI.CloseSceneUI<UI_Game_Menu_Collection>();
-                Managers.UI.ShowSceneUI<UI_Game_Menu_Module>();
-            });
+            evt => ModuleMenu());
 
-        BindEvent(GetObject((int)GameObjects.WeaponMenuHandler),
-            evt =>
-            {
-                Managers.UI.CloseSceneUI<UI_Game_Menu_Collection>();
-                Managers.UI.ShowSceneUI<UI_Game_Menu_Weapon>();
-            });
+        BindEvent(GetObject((int)GameObjects.MenuMenuHandler),
+            evt => MenuMenu());
 
         _itemPanel = GetObject((int)GameObjects.Items);
 
         Refresh();
     }
 
+    private void ModuleMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu_Collection>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu_Module>();
+    }
+
+    private void MenuMenu()
+    {
+        Managers.UI.CloseSceneUI<UI_Game_Menu_Collection>();
+        Managers.UI.ShowSceneUI<UI_Game_Menu>();
+    }
+
     private void Update()
     {
+        if (Managers.Pause.IsPause == false)
+            return;
+
         if (Managers.Input.GetInputDown(Define.InputType.Menu))
         {
             Managers.UI.CloseSceneUI<UI_Game_Menu_Collection>();
             Managers.UI.ShowSceneUI<UI_Game>();
             Managers.Pause.Play();
         }
+        else if (Managers.Input.GetInputDown(Define.InputType.Left))
+            ModuleMenu();
+        else if (Managers.Input.GetInputDown(Define.InputType.Right))
+            MenuMenu();
     }
 
     private void Refresh()
