@@ -33,14 +33,12 @@ public class PlayerController : BaseController
     //절벽 위치 확인
     private Transform ledgeCheck;
 
-    //플레이어 방향 변수 (오른쪽=1, 왼쪽=-1)
-    [HideInInspector] public float dir = 1f;
     //플레이어 고정 변수
     [HideInInspector] public bool isFix;
 
 
     //여러 기능과 관련된 조건
-    private bool isWallBehind, isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
+    private bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
         isGrounded = false, isWallJump = false, isRoll = false, fixFlip = false;
 
     //절벽 잡기 시 위치 정보를 저장
@@ -102,7 +100,7 @@ public class PlayerController : BaseController
     void Look()
     {
         //플레이어의 위,아래를 봤을 때 특정 animation을 동작시키는 코드
-        headAngle = (90 - (float)Managers.Input.GunAngle)*(int)Managers.Input.CurrentMoveDir;
+        headAngle = (90 - (float)Managers.Input.GunAngle)*Mathf.Sign((int)Managers.Input.CurrentMoveDir);
 
         if (headAngle < -20)
             headAngle = -20;
@@ -142,10 +140,10 @@ public class PlayerController : BaseController
         if (isLedge && canGrabLedge)
         {
             canGrabLedge = false;
-            Vector2 ledgePosition = new Vector2(ledgeCheck.transform.position.x + (0.5f * dir), ledgeCheck.transform.position.y);
+            Vector2 ledgePosition = new Vector2(ledgeCheck.transform.position.x + (0.5f * Mathf.Sign((int)Managers.Input.CurrentMoveDir)), ledgeCheck.transform.position.y);
             fixFlip = true;
-            climbBegunPosition = ledgePosition + new Vector2(offset1.x * dir, offset1.y);
-            climbOverPosition = ledgePosition + new Vector2(offset2.x * dir, offset2.y);
+            climbBegunPosition = ledgePosition + new Vector2(offset1.x * Mathf.Sign((int)Managers.Input.CurrentMoveDir), offset1.y);
+            climbOverPosition = ledgePosition + new Vector2(offset2.x * Mathf.Sign((int)Managers.Input.CurrentMoveDir), offset2.y);
             canClimbLedge = true;
         }
         //animation이 하나로 만들어져 있기 때문에 팔 부분은 비활성화 시켜 주고
@@ -197,8 +195,8 @@ public class PlayerController : BaseController
         horizontal = (Managers.Input.GetInput(Define.InputType.Right)||
             Managers.Input.GetInput(Define.InputType.Left)) ?1:0;
 
-        if (!isWallFront && Mathf.Abs(horizontal) > 0)
-            xspeed = (int)Managers.Input.CurrentMoveDir * 0.08f;
+        if (Mathf.Abs(horizontal) > 0)
+            xspeed = Mathf.Sign((int)Managers.Input.CurrentMoveDir) * 0.08f;
         else
             xspeed = 0;
             
@@ -222,7 +220,7 @@ public class PlayerController : BaseController
             rigid.gravityScale = 10f;
             if (Mathf.Abs(rigid.velocity.x) < 0.3f)
             {
-                rigid.AddForce(new Vector2(0.2f * dir, 0), ForceMode2D.Impulse);
+                rigid.AddForce(new Vector2(0.2f * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0), ForceMode2D.Impulse);
             }
         }
         else
@@ -238,12 +236,12 @@ public class PlayerController : BaseController
         if (fixFlip) return;
 
         //플레이어 스프라이트 좌우 반전
-        //dir변수는 보고 있는 방향. 1이면 오른쪽, -1이면 왼쪽
-        if ((int)Managers.Input.CurrentMoveDir > 0 || (isSlope && rigid.velocity.x > 0))
+        //Mathf.Sign((int)Managers.Input.CurrentMoveDir)변수는 보고 있는 방향. 1이면 오른쪽, -1이면 왼쪽
+        if (Mathf.Sign((int)Managers.Input.CurrentMoveDir) > 0 || (isSlope && rigid.velocity.x > 0))
         {
             transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
         }
-        else if ((int)Managers.Input.CurrentMoveDir < 0 || (isSlope && rigid.velocity.x < 0))
+        else if (Mathf.Sign((int)Managers.Input.CurrentMoveDir) < 0 || (isSlope && rigid.velocity.x < 0))
         {
             transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
         }
@@ -344,7 +342,7 @@ public class PlayerController : BaseController
             Managers.Sound.Play("player_jump");
             ((BoxCollider2D)coll).size = new Vector3(0.5f, 0.5f, 1f);
             rigid.velocity = Vector2.zero;
-            StartCoroutine(forceX((int)Managers.Input.CurrentMoveDir * 0.15f, 0.6f));
+            StartCoroutine(forceX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * 0.15f, 0.6f));
             leftArm.SetActive(false);
             rightArm.SetActive(false);
             head.SetActive(false);
@@ -356,7 +354,7 @@ public class PlayerController : BaseController
         {
             xspeed = 0;
             rigid.velocity = Vector2.zero;
-            StartCoroutine(forceX((int)Managers.Input.CurrentMoveDir * -0.04f, 0.6f));
+            StartCoroutine(forceX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * -0.04f, 0.6f));
         }
         if (isRoll && isGrounded) animator.speed = 1;
     }
@@ -380,7 +378,6 @@ public class PlayerController : BaseController
     {
         //특정 상황에서 한 쪽으로 힘을 주기 위한 메소드
         fixFlip = true;
-        dir = Mathf.Sign(forceX);
         transform.localScale = new Vector3(Mathf.Sign(forceX), transform.localScale.y, transform.localScale.z);
 
         Debug.Log("forceX=" + forceX + ": localScale=" + transform.localScale.x);
@@ -396,12 +393,11 @@ public class PlayerController : BaseController
         isGrounded = Physics2D.Raycast(new Vector2(transform.position.x - 0.2f, transform.position.y), Vector2.down, 0.6f, groundMask)
             || Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y), Vector2.down, 0.6f, groundMask)
             || Physics2D.Raycast(new Vector2(transform.position.x + 0.2f, transform.position.y), Vector2.down, 0.6f, groundMask);
-        isWallBehind = Physics2D.Raycast(transform.position, new Vector2(-dir, 0), 0.4f, platformMask);
-        isLedge = !Physics2D.Raycast(ledgeCheck.position, Vector2.right*dir, 0.5f, groundMask) && !isWallUp &&
-            Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), Vector2.right*dir, 0.5f, platformMask);
-        isWallFront = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), new Vector2(dir, 0), 0.4f, platformMask);
-        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.6f, platformMask);
-        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.6f, platformMask);
+        isLedge = !Physics2D.Raycast(ledgeCheck.position, Vector2.right*Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, groundMask) && !isWallUp &&
+            Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), Vector2.right * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, platformMask);
+        isWallFront = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), new Vector2(Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0), 0.4f, platformMask);
+        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.8f, platformMask);
+        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.8f, platformMask);
         isWallUp = Physics2D.Raycast(transform.position, Vector2.up, 0.8f, groundMask);
         isSlope = Physics2D.Raycast(transform.position, Vector2.down, 1f, slopeMask);
 

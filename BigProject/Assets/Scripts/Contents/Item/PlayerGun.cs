@@ -5,23 +5,14 @@ public class PlayerGun : Despawnable
 {
     //팔 부분 오브젝트
     private GameObject leftArm, rightArm;
-    //마우스 위치
-    Vector2 mouse;
     //근접 공격이 가능한 시각(발동 시작시부터)
     private float attackTime = 0;
-    //플레이어 방향
-    private float dir = 0;
-    //근접 공격시의 팔 각도
-    private float meleeAngle = 0;
     //defend상태
     private bool isDefend = false;
     //팔의 방향(위=-1,아래=1)
     private float isAngleDown = 0;
-    //근접 공격 컴포넌트
-    private MeleeAttack melee;
-    //팔 각도
-    public float angle { private set; get; }
-    public float gunAngle { private set; get; }
+    //최근 팔의 각도
+    private float lastAngle = 0;
     //총이 사용 가능한지
     [HideInInspector] public bool canShoot;
     
@@ -53,18 +44,16 @@ public class PlayerGun : Despawnable
     {
         Melee();
         Fire();
-
-        dir = (int)Managers.Input.CurrentMoveDir;
-
-        mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        angle = (90 - (float)Managers.Input.GunAngle) * (int)Managers.Input.CurrentMoveDir;
     }
 
     private void FixedUpdate()
     {
-        leftArm.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward * Time.deltaTime);
-        rightArm.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward * Time.deltaTime);
+        leftArm.transform.rotation = 
+            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 
+            Vector3.forward * Time.deltaTime);
+        rightArm.transform.rotation = 
+            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 
+            Vector3.forward * Time.deltaTime);
     }
     private void Melee()
     {
@@ -79,7 +68,6 @@ public class PlayerGun : Despawnable
 
         if (Managers.Input.GetInputDown(Define.InputType.Skill2) && Managers.Skill.CanUseSkill("parry") && attackTime < 0)
         {
-            meleeAngle = angle;
             attackTime = 0.5f;
             leftArm.GetComponent<SpriteRenderer>().color = new Color(0, 150, 255);
             rightArm.GetComponent<SpriteRenderer>().color = new Color(0, 150, 255);
@@ -135,7 +123,7 @@ public class PlayerGun : Despawnable
                     GameObject dart = Managers.Resource.Instantiate("dart");
                     dart.transform.position = new Vector2(transform.position.x, transform.position.y);
 
-                    dart.transform.rotation = Quaternion.AngleAxis(-(float)Managers.Input.GunAngle*(int)Managers.Input.CurrentMoveDir, Vector3.forward);
+                    dart.transform.rotation = Quaternion.AngleAxis(-(float)Managers.Input.GunAngle*Mathf.Sign((int)Managers.Input.CurrentMoveDir), Vector3.forward);
                     dart.GetComponent<Dart>().status = status;
                     break;
             }
