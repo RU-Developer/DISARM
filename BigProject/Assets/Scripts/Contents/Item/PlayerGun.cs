@@ -99,6 +99,7 @@ public class PlayerGun : Despawnable
 
     private void Fire()
     {
+
         // 패링 시전 중에는 금지
         if (Managers.Input.GetInputDown(Define.InputType.Skill2))
             return;
@@ -118,6 +119,13 @@ public class PlayerGun : Despawnable
 
                     Dart.dartNum++;
                     Debug.Log($"dartNum = {Dart.dartNum}");
+
+                    //아래로 조준 & 떨어지고 있을 때 살짝 떠오르는 효과
+                    if ((float)Managers.Input.GunAngle >135 && !GetComponent<PlayerController>().isGrounded)
+                    {
+                        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
+                        GetComponent<Rigidbody2D>().AddForce(Vector2.up * 4f, ForceMode2D.Impulse);
+                    }
 
                     Managers.Sound.Play("dart_fire");
                     GameObject dart = Managers.Resource.Instantiate("dart");
