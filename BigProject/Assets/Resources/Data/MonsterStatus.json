@@ -1,44 +1,49 @@
 {
-    "monsterStats": [
-        {
-            "id": "Slime",
-            "maxHp": 100,
-            "attack": 30
-        },
-        {
-            "id": "Fly",
-            "maxHp": 100,
-            "attack": 30
-        },
-        {
-            "id": "Flower",
-            "maxHp": 100,
-            "attack": 0
-        },
-        {
-            "id": "Crawler",
-            "maxHp": 20,
-            "attack": 30
-        },
-        {
-            "id": "Turret",
-            "maxHp": 20,
-            "attack": 0
-        },
-        {
-            "id": "Trapper",
-            "maxHp": 20,
-            "attack": 20
-        },
-        {
-            "id": "Security",
-            "maxHp": 50,
-            "attack": 30
-        },
-        {
-            "id": "Shooter",
-            "maxHp": 70,
-            "attack": 30
-        }
-    ]
+  "monsterStats": [
+    {
+      "id": "Slime",
+      "maxHp": 100,
+      "attack": 30
+    },
+    {
+      "id": "Fly",
+      "maxHp": 100,
+      "attack": 30
+    },
+    {
+      "id": "Flower",
+      "maxHp": 100,
+      "attack": 0
+    },
+    {
+      "id": "Crawler",
+      "maxHp": 20,
+      "attack": 30
+    },
+    {
+      "id": "Turret",
+      "maxHp": 20,
+      "attack": 0
+    },
+    {
+      "id": "Trapper",
+      "maxHp": 20,
+      "attack": 20
+    },
+    {
+      "id": "Security",
+      "maxHp": 50,
+      "attack": 30
+    },
+    {
+      "id": "Shooter",
+      "maxHp": 70,
+      "attack": 30
+    },
+    {
+      "id": "Palm",
+      "maxHp": 1000,
+      "attack": 30
+    }
+  ]
 }
