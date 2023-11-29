@@ -44,9 +44,9 @@ public class UI_Game_Menu : UI_Scene
 
     private void SetState(GameObjects state)
     {
-        GetObject((int)_state).GetComponent<Image>().color = new Color(255, 255, 255, 0);
+        GetObject((int)_state).GetComponent<Image>().color = new Color32(255, 255, 255, 0);
         _state = state;
-        GetObject((int)_state).GetComponent<Image>().color = new Color(255, 255, 255, 20);
+        GetObject((int)_state).GetComponent<Image>().color = new Color32(255, 255, 255, 20);
     }
 
     private void Update()
