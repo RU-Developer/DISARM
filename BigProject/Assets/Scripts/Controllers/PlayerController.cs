@@ -135,7 +135,7 @@ public class PlayerController : BaseController
         if (!Managers.Data.MapItemDict["GrabLedge"].consume)
             return;
 
-        if (!isWallFront || isFix) return;
+        if (isWallJump || isFix) return;
 
         //절벽을 잡을 수 있고, 마우스 각도가 캐릭터 위를 향할 때 작동
         //처음 위치와 끝 위치를 설정한다
@@ -156,9 +156,11 @@ public class PlayerController : BaseController
             rigid.velocity = Vector2.zero;
             fixFlip = true;
             transform.position = climbBegunPosition;
+
             leftArm.SetActive(false);
             rightArm.SetActive(false);
             head.SetActive(false);
+
             playerGun.canShoot = false;
             animator.speed = 1;
             animator.SetBool("isClimb", true);

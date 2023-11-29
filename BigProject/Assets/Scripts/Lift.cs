@@ -36,7 +36,7 @@ public class Lift : MonoBehaviour
                     if (player.transform.position.y > up.transform.position.y)
                     {
                         transform.position = up.transform.position;
-                        player.transform.position = new Vector2(up.transform.position.x, up.transform.position.y + 0.8f);
+                        player.transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
                         isLift = false;
                     }
                 }
@@ -45,7 +45,7 @@ public class Lift : MonoBehaviour
                     if (player.transform.position.y < down.transform.position.y)
                     {
                         transform.position = down.transform.position;
-                        player.transform.position = new Vector2(down.transform.position.x, down.transform.position.y + 0.8f);
+                        player.transform.position = new Vector2(transform.position.x, transform.position.y + 0.6f);
                         isLift = false;
                     }
                 }
@@ -77,13 +77,13 @@ public class Lift : MonoBehaviour
             player = collision.gameObject.GetComponent<PlayerController>();
             if (canLift)
             {
-                if ((Managers.Input.CurrentAngle < 90 || Managers.Input.CurrentAngle > 270) && upward)
+                if ((Managers.Input.CurrentAngle < 45 || Managers.Input.CurrentAngle > 315) && upward)
                 {
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;
                     canLift = false;
                 }
-                if ((Managers.Input.CurrentAngle > 90 && Managers.Input.CurrentAngle < 270) && !upward)
+                if ((Managers.Input.CurrentAngle > 135 && Managers.Input.CurrentAngle < 225) && !upward)
                 {
                     player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     isLift = true;
