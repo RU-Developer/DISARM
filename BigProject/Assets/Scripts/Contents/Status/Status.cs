@@ -47,6 +47,11 @@ public abstract class Status : Despawnable
         Managers.Sound.Play("get_hit");
         _hp -= damage;
 
+        BaseController controller = null;
+        if ((controller = gameObject.GetComponent<BaseController>()) != null &&
+            (controller.WorldObjectType == Define.WorldObject.Player || controller.WorldObjectType == Define.WorldObject.Monster))
+            controller.OnHit();
+
         StartCoroutine(Hit());
         if (knockback != new Vector2())
         {

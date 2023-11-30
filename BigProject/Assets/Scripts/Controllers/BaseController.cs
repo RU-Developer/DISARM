@@ -35,4 +35,9 @@ public class BaseController : MonoBehaviour
             foreach (Despawnable item in despawnables)
                 item.Despawn();
     }
+
+    public virtual void OnHit()
+    {
+
+    }
 }
