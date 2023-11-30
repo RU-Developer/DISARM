@@ -1,12 +1,20 @@
 {
-    "skills": [
-        {
-            "id": "dive",
-            "coolTime": 1.0
-        },
-        {
-            "id": "parry",
-            "coolTime": 1.2000000476837159
-        }
-    ]
+  "skills": [
+    {
+      "id": "dive",
+      "coolTime": 1.0
+    },
+    {
+      "id": "parry",
+      "coolTime": 1.2000000476837159
+    },
+    {
+      "id": "palm_melee",
+      "coolTime": 5.0
+    },
+    {
+      "id": "palm_ranged",
+      "coolTime": 5.0
+    }
+  ]
 }

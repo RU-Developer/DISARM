@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 class Palm : MonsterController
@@ -23,6 +24,9 @@ class Palm : MonsterController
 
     private Phase _phase = Phase.None;
     private PalmState _state = PalmState.Idle;
+
+    private string _meleeSkill = "palm_melee";
+    private string _rangedSkill = "palm_ranged";
 
     protected override void OnEnable()
     {
@@ -53,11 +57,10 @@ class Palm : MonsterController
                 // 방향에 따라 뒤집어서 이동 애니메이션
                 break;
             case PalmState.MeleeAttack:
-                // 일반 공격 애니메이션
-                // Skill이 있다면 각각 다른 것들 추가해야 할 것
+                // 근접 공격
                 break;
             case PalmState.RangedAttack:
-
+                // 원거리 공격
                 break;
         }
 
@@ -113,6 +116,7 @@ class Palm : MonsterController
         // phase 변경시마다 뭔가 이벤트를 주고 싶다면 SetPhase 함수 수정
     }
 
+    // 상태 변경하면서 애니메이션도 해당 상태에 맞는 걸로 변경함.
     private void SetState(PalmState state)
     {
         if (_state == state)
@@ -153,6 +157,43 @@ class Palm : MonsterController
         // 그 스킬이 사용 가능하면 범위를 체크 하고, 그 중에서 사정거리 맞는거 바로 사용?
         // 쿨타임 없는 게 있으면 ... Attack... 일반공격? 사거리 안에 들면 그것도 가능
         // 없다면 다시 Move
+
+        GameObject player = Managers.Game.GetPlayer();
+        if (player == null)
+            return;
+
+        float distance = Vector2.Distance(gameObject.transform.position, player.transform.position);
+
+        // 일정 거리 근접까지 움직이고 나서 한동안 움직이는 것도 못하게 하는 것도 좋고..
+        // 움직이는 것도 Skill로 만들어도 좋고 스킬이야 뭐 json수정하고 사용하기만 하면 됨
+        // 그냥 쿨타임 들어가는 것들 막 넣어서 사용 해도 됨
+        // Move가 끝나는 타이밍에 Skill 쿨타임을 돌려서 Move 조건이 안맞도록 하는거지..
+        // 스킬이랑 Move가 전부 다 쿨타임일 경우 아무것도 하지 않는 가만히 있는 상황이 나오겠네
+        switch (_phase)
+        {
+            case Phase.Phase1:
+                if (distance < 1.5f && Managers.Skill.CanUseSkill(_meleeSkill))
+                    Managers.Skill.UseSkill(_meleeSkill);
+                else if (distance > 1.0f)
+                    SetState(PalmState.Move);
+                break;
+            case Phase.Phase2:
+                if (distance < 1.5f && Managers.Skill.CanUseSkill(_meleeSkill))
+                    Managers.Skill.UseSkill(_meleeSkill);
+                else if (distance > 30.0f && Managers.Skill.CanUseSkill(_rangedSkill))
+                    Managers.Skill.UseSkill(_rangedSkill);
+                else if (distance > 1.0f)
+                    SetState(PalmState.Move);
+                break;
+            case Phase.Phase3:
+                if (distance < 1.5f && Managers.Skill.CanUseSkill(_meleeSkill))
+                    Managers.Skill.UseSkill(_meleeSkill);
+                else if (distance > 30.0f && Managers.Skill.CanUseSkill(_rangedSkill))
+                    Managers.Skill.UseSkill(_rangedSkill);
+                else if (distance > 1.0f)
+                    SetState(PalmState.Move);
+                break;
+        }
     }
 
     private void Move()
@@ -161,6 +202,29 @@ class Palm : MonsterController
         // 플레이어 위치 가져와서 해당 위치 방향으로 스피드 만큼 움직이기
         // 움직임이 없는 보스라면 좀 다를 듯
         // 한번 움직이고 나면 Idle로 이동
+        GameObject player = Managers.Game.GetPlayer();
+        if (player == null)
+            return;
+
+        float distance = Vector2.Distance(gameObject.transform.position, player.transform.position);
+        Vector2 dir = player.transform.position - gameObject.transform.position;
+        dir.y = 0;
+        dir = dir.normalized;
+
+        switch (_phase)
+        {
+            case Phase.Phase1:
+                transform.Translate(dir * Time.deltaTime * 1f);
+                break;
+            case Phase.Phase2:
+                transform.Translate(dir * Time.deltaTime * 1.1f);
+                break;
+            case Phase.Phase3:
+                transform.Translate(dir * Time.deltaTime * 2f);
+                break;
+        }
+
+        SetState(PalmState.Idle);
     }
 
     private void MeleeAttack()
@@ -168,18 +232,42 @@ class Palm : MonsterController
         // 근접공격 애니메이션 끝났으면 피격 판정 넣고(범위에 아직 있다면) Idle State로 이동
         // 범위 판정은 삼각함수 외적을 이용하거나 충돌 되는 범위를 생성해서 아래의 원거리 공격과 동일하게 데미지 주는 방식
         // 삼각함수 외적인 경우 여기서 데미지 처리 로직을 작성할 수 있음
+        // 데미지 예시
+        Managers.Game.GetPlayer().GetComponent<PlayerStatus>().OnDamaged(status, new Vector2(2, 0));
+        // 여기서 뭐 원하는 deltaTime이 지날때까지 Idle에 들어가지 않게 해도 좋고.. 뭐 편할 대로..
+        SetState(PalmState.Idle);
     }
 
     private void RangedAttack()
     {
-        // 투사체 생성 애니메이션 실행. 끝났으면 뒤에꺼 실행
+        // 투사체 생성 애니메이션 실행. 끝났으면 뒤에 여기 로직 실행
         // 투사체 생성(Managers.Resource.Instantiate)
         // 투사체의 타겟을 Managers.Game.GetPlayer().position으로 Init()을 통해 지정해주기
         // Palm 보스 몬스터의 MonsterStatus도 넘겨주면 좋을 것
         // 투사체는 Init이 호출되고 나면 해당 포인트로 이동하며 충돌시 플레이어에게 데미지를 줌.
         // 충돌시 MonsterStatus를 공격자로 잡고, PlayerStatus 맞는 사람으로 해서 OnDamaged 호출.
+        SetState(PalmState.Idle);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = Managers.Game.GetPlayer().GetComponent<PlayerController>();
+            if (player.isRoll)
+            {
+                Vector2 pushDir = gameObject.transform.position - player.transform.position;
+                pushDir.y = 0f;
+                pushDir = pushDir.normalized; // x축 방향으로만 밀침
+                status.OnDamaged(player.GetComponent<PlayerStatus>(), pushDir * 10f, 0); // 데미지 없이 밀치기만
+                SetState(PalmState.Idle); // 이 부분은 다른 상태를 만들어서 밀려나는 상태가 끝나면 Idle로 만들어줘도 OK
+                // 뭔가 누적되서 그로기 상태를 만들어 줘도 ok)
+
+                // 플레이어가 몬스터에 닿는 거도 점프나 dive 착지가 좀 되야 될 듯.
+                // dive가 몬스터에 닿으면 dive를 바로 끝내게 만드는 것도 좋고.
+            }
+        }
+    }
     public override void Die()
     {
         Debug.Log("dead");

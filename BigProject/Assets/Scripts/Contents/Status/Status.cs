@@ -33,7 +33,7 @@ public abstract class Status : Despawnable
 
     protected virtual void Init()
     {
-        rigid = GetComponent<Rigidbody2D>();
+        rigid = gameObject.GetOrAddComponent<Rigidbody2D>();
     }
 
     /**

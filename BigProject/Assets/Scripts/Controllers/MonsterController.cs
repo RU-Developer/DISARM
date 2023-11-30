@@ -11,7 +11,7 @@ public class MonsterController : BaseController
     public override void Init()
     {
         base.Init();
-        status = gameObject.GetComponent<MonsterStatus>();
+        status = gameObject.GetOrAddComponent<MonsterStatus>();
         WorldObjectType = Define.WorldObject.Monster;
     }
 

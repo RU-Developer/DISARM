@@ -55,6 +55,6 @@ public class SkillManager
     public bool CanUseSkill(string skillName)
     {
         float time = lastUsedTimes[skillName] + currentCoolTime[skillName] - Time.time;
-        return time > 0 ? false : true;
+        return time <= 0;
     }
 }

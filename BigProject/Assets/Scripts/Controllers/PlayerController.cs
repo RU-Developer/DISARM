@@ -37,8 +37,8 @@ public class PlayerController : BaseController
     [HideInInspector] public bool isFix;
 
 
-    //여러 기능과 관련된 조건
-    private bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
+    //여러 기능과 관련된 조건 : 외부에서 현재 dive중인지 파악을 위해 사용함
+    public bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
         isWallJump = false, isRoll = false, fixFlip = false;
     public bool isGrounded{ private set; get; }
 
