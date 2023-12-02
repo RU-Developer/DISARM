@@ -23,12 +23,12 @@ public class PlayerController : BaseController
     private ParticleSystem groundParticle;
 
     //컴포넌트
-    Rigidbody2D rigid;
+    private Rigidbody2D rigid;
     private GameObject head;
-    Animator animator;
-    Collider2D coll;
-    PlayerGun playerGun;
-    public GameObject leftArm, rightArm;
+    private Animator animator;
+    private Collider2D coll;
+    private PlayerGun playerGun;
+    private GameObject leftArm, rightArm;
 
     //절벽 위치 확인
     private Transform ledgeCheck;
@@ -38,7 +38,7 @@ public class PlayerController : BaseController
 
 
     //여러 기능과 관련된 조건 : 외부에서 현재 dive중인지 파악을 위해 사용함
-    public bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
+    [HideInInspector]public bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
         isWallJump = false, isRoll = false, fixFlip = false;
     public bool isGrounded{ private set; get; }
 
@@ -68,10 +68,13 @@ public class PlayerController : BaseController
         //변수에 컴포넌트 할당
         rigid = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        head = this.gameObject.FindChild("head");
         coll = GetComponent<BoxCollider2D>();
         playerGun = GetComponent<PlayerGun>();
         groundParticle = this.gameObject.FindChild("run_particle").GetComponent<ParticleSystem>();
+
+        head = this.gameObject.FindChild("head");
+        leftArm = this.gameObject.FindChild("leftArm");
+        rightArm = this.gameObject.FindChild("rightArm");
 
         //원래 gravityScale과 collider size를 저장
         initGravity = rigid.gravityScale;

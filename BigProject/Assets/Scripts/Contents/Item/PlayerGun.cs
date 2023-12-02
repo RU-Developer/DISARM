@@ -7,14 +7,11 @@ public class PlayerGun : Despawnable
     private GameObject leftArm, rightArm;
     //근접 공격이 가능한 시각(발동 시작시부터)
     private float attackTime = 0;
-    //defend상태
-    private bool isDefend = false;
-    //팔의 방향(위=-1,아래=1)
-    private float isAngleDown = 0;
     //최근 팔의 각도
     private float lastAngle = 0;
     //총이 사용 가능한지
     [HideInInspector] public bool canShoot;
+    private bool canParry;
 
     private string weapon;
     private PlayerStatus status;
@@ -25,6 +22,7 @@ public class PlayerGun : Despawnable
             return;
 
         canShoot = true;
+        canParry = true;
 
         leftArm = gameObject.FindChild("leftArm");
         rightArm = gameObject.FindChild("rightArm");
@@ -66,31 +64,39 @@ public class PlayerGun : Despawnable
 
         attackTime -= Time.deltaTime;
 
-        if (Managers.Input.GetInputDown(Define.InputType.Skill2) && Managers.Skill.CanUseSkill("parry") && attackTime < 0)
+        if (Managers.Input.GetInputDown(Define.InputType.Skill2) && Managers.Skill.CanUseSkill("parry") && attackTime < 0 && canParry)
         {
+            canParry = false;
             attackTime = 0.5f;
+            lastAngle = (90 - (float)Managers.Input.GunAngle);
+            leftArm.GetComponent<MeleeAttack>().canParry = true;
+            leftArm.FindChild("Trail").GetComponent<TrailRenderer>().time = 1;
             leftArm.GetComponent<SpriteRenderer>().color = new Color(0, 150, 255);
             rightArm.GetComponent<SpriteRenderer>().color = new Color(0, 150, 255);
         }
-
-        if (attackTime> 0 && !isDefend && Managers.Skill.CanUseSkill("parry"))
+        if (attackTime > 0)
         {
-            isDefend = true;
-            Managers.Sound.Play("player_parry");
-        }
-
-        if (Managers.Skill.CanUseSkill("parry"))
-        {
-            
-        }
-
-        if (attackTime < 0)
-        {
-            if(isDefend&& Managers.Skill.CanUseSkill("parry"))
+            if(lastAngle+10 < 90 - (float)Managers.Input.GunAngle)
             {
-                isDefend = false;
-                Managers.Skill.UseSkill("parry");
+                leftArm.GetComponent<MeleeAttack>().dir = 1;
             }
+            else if(lastAngle-10 > 90 - (float)Managers.Input.GunAngle)
+            {
+                leftArm.GetComponent<MeleeAttack>().dir = -1;
+            }
+            else
+            {
+                leftArm.GetComponent<MeleeAttack>().dir = 0;
+            }
+        }
+
+        if (attackTime < 0 && !canParry)
+        {
+            canParry = true;
+            Managers.Skill.UseSkill("parry");
+            leftArm.GetComponent<MeleeAttack>().dir = 0;
+            leftArm.GetComponent<MeleeAttack>().canParry = false;
+            leftArm.FindChild("Trail").GetComponent<TrailRenderer>().time = 0;
             leftArm.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
             rightArm.GetComponent<SpriteRenderer>().color = new Color(255, 255, 255);
         }
@@ -99,7 +105,6 @@ public class PlayerGun : Despawnable
 
     private void Fire()
     {
-        Debug.Log(canShoot);
         // 패링 시전 중에는 금지
         if (Managers.Input.GetInputDown(Define.InputType.Skill2) || !canShoot)
             return;
@@ -124,12 +129,12 @@ public class PlayerGun : Despawnable
                     if ((float)Managers.Input.GunAngle >135 && !GetComponent<PlayerController>().isGrounded)
                     {
                         GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
-                        GetComponent<Rigidbody2D>().AddForce(Vector2.up * 2f, ForceMode2D.Impulse);
+                        GetComponent<Rigidbody2D>().AddForce(Vector2.up * 4f, ForceMode2D.Impulse);
                     }
 
                     Managers.Sound.Play("dart_fire");
                     GameObject dart = Managers.Resource.Instantiate("dart");
-                    dart.transform.position = new Vector2(transform.position.x, transform.position.y);
+                    dart.transform.position = new Vector2(leftArm.transform.position.x, leftArm.transform.position.y);
 
                     dart.transform.rotation = Quaternion.AngleAxis(-(float)Managers.Input.GunAngle*Mathf.Sign((int)Managers.Input.CurrentMoveDir), Vector3.forward);
                     dart.GetComponent<Dart>().status = status;

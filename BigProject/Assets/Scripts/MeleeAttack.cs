@@ -6,8 +6,21 @@ public class MeleeAttack : MonoBehaviour
 {
     private NonDamageableEnvStatus status;
     private bool isReflect = false;
+    [HideInInspector]public bool canParry = false;
     public float dir = 0;
     private GameObject projectile;
+    private void FixedUpdate()
+    {
+        if (canParry)
+        {
+            GetComponent<CircleCollider2D>().enabled = true;
+        }
+        else
+        {
+            GetComponent<CircleCollider2D>().enabled = false;
+            isReflect = false;
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponent<Bullet>() != null && !isReflect)
