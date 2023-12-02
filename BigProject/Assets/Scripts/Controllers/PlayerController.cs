@@ -139,7 +139,9 @@ public class PlayerController : BaseController
 
         //절벽을 잡을 수 있고, 마우스 각도가 캐릭터 위를 향할 때 작동
         //처음 위치와 끝 위치를 설정한다
-        if (isLedge && canGrabLedge)
+        if (isLedge && canGrabLedge
+            &&(((int)Managers.Input.CurrentMoveDir>0&&headAngle==20)
+            || ((int)Managers.Input.CurrentMoveDir<0 && headAngle==-20)))
         {
             canGrabLedge = false;
             Vector2 ledgePosition = new Vector2(ledgeCheck.transform.position.x + (0.5f * Mathf.Sign((int)Managers.Input.CurrentMoveDir)), ledgeCheck.transform.position.y);
@@ -313,7 +315,7 @@ public class PlayerController : BaseController
                 {
                     isWallJump = true;
                     rigid.velocity = Vector2.zero;
-                    StartCoroutine(forceX(scale* 0.12f, 0.4f));
+                    StartCoroutine(forceX(scale* 0.1f, 0.35f));
                     rigid.velocity = new Vector2(rigid.velocity.x, jumpForce * 0.5f);
 
                     Managers.Sound.Play("player_jump");
@@ -343,14 +345,19 @@ public class PlayerController : BaseController
             isRoll = true;
             fixFlip = true;
             canGrabLedge = false;
+            playerGun.canShoot = false;
+
             Managers.Sound.Play("player_jump");
             ((BoxCollider2D)coll).size = new Vector3(0.5f, 0.5f, 1f);
+
             rigid.velocity = Vector2.zero;
+            rigid.AddForce(Vector2.up * jumpForce * 0.4f, ForceMode2D.Impulse);
             StartCoroutine(forceX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * 0.15f, 0.6f));
+
             leftArm.SetActive(false);
             rightArm.SetActive(false);
             head.SetActive(false);
-            playerGun.canShoot = false;
+            
             animator.SetBool("isRoll", true);
             animator.speed = 0;
         }

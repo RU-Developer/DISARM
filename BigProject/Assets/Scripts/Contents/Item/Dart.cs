@@ -56,7 +56,7 @@ public class Dart : MonoBehaviour
     {
         if (fix)
         {
-            Managers.Resource.Destroy(this.gameObject, 1.5f, () => Dart.dartNum--);
+            Managers.Resource.Destroy(this.gameObject, 3f, () => Dart.dartNum--);
             fix = false;
         }
         else

@@ -5,31 +5,37 @@ using UnityEngine;
 public class Shooter : MonsterController
 {
     private Collider2D detected;
-    Rigidbody2D rigid;
     private GameObject bullet;
     private float xspeed, yspeed;
-    private bool isEndX, isEndY, canTurn;
+    private bool isEndX, isEndY, canTurn,isShooting,shootRange;
     public Vector2 direction;
-    private float xturn, yturn;
 
     protected override void OnEnable()
     {
         base.OnEnable();
         xspeed = 0f;
         yspeed = 0f;
-        xturn = 1;
-        yturn = 1;
+        isShooting = false;
         canTurn = true;
         StartCoroutine(Think());
-        rigid = GetComponent<Rigidbody2D>();
     }
 
     public void FixedUpdate()
     {
         detected = Physics2D.OverlapCircle(this.transform.position, 4f, LayerMask.GetMask("Player"));
-        isEndX = Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(xspeed * xturn), 0.6f, LayerMask.GetMask("Platform"));
-        isEndY = Physics2D.Raycast(transform.position, Vector2.up * Mathf.Sign(yspeed * yturn), 0.6f, LayerMask.GetMask("Platform"));
-        transform.Translate(new Vector2(xspeed * xturn, yspeed * yturn));
+        shootRange = Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(xspeed), 4f, LayerMask.GetMask("Player"));
+        isEndX = Physics2D.Raycast(transform.position, Vector2.right * Mathf.Sign(xspeed), 0.6f, LayerMask.GetMask("Platform"));
+        isEndY = Physics2D.Raycast(transform.position, Vector2.up * Mathf.Sign(yspeed), 0.6f, LayerMask.GetMask("Platform"));
+        transform.Translate(new Vector2(xspeed, yspeed));
+        if (xspeed > 0 && !isShooting)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        }
+        else if (xspeed < 0 && !isShooting)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        }
+        Debug.Log(canTurn);
 
         if (canTurn)
         {
@@ -44,19 +50,19 @@ public class Shooter : MonsterController
                 StartCoroutine(TurnY());
             }
         }
+
+        
     }
     IEnumerator TurnX()
     {
-        xturn = -1;
-        yield return new WaitForSeconds(0.5f);
-        xturn = 1;
+        xspeed = -xspeed;
+        yield return new WaitForSeconds(1f);
         canTurn = true;
     }
     IEnumerator TurnY()
     {
-        yturn = -1;
-        yield return new WaitForSeconds(0.5f);
-        yturn = 1;
+        yspeed = -yspeed;
+        yield return new WaitForSeconds(1f);
         canTurn = true;
     }
     IEnumerator Think()
@@ -73,8 +79,6 @@ public class Shooter : MonsterController
             }
             else
             {
-                if (detected != null)
-                    StartCoroutine(Detect());
                 yield return new WaitForSeconds(Random.Range(0.5f, 1f));
                 StartCoroutine(Think());
             }
@@ -87,8 +91,12 @@ public class Shooter : MonsterController
 
     IEnumerator Move()
     {
-        xspeed = Random.Range(-0.01f, 0.01f);
-        yspeed = Random.Range(-0.01f, 0.01f);
+        if (canTurn)
+        {
+            xspeed = Random.Range(-0.01f, 0.01f);
+            yspeed = Random.Range(-0.01f, 0.01f);
+        }
+        
         if (detected != null)
             StartCoroutine(Detect());
         yield return new WaitForSeconds(Random.Range(0.5f, 1f));
@@ -98,46 +106,47 @@ public class Shooter : MonsterController
     IEnumerator Detect()
     {
         Rigidbody2D player = detected.gameObject.GetComponent<Rigidbody2D>();
-        canTurn = false;
-        xturn = 1; yturn = 1;
-        xspeed = (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.1f)
+        if (canTurn)
+        {
+            xspeed = (Mathf.Abs(transform.position.x - player.transform.position.x) >= 0.1f)
             ? Mathf.Sign(player.position.x - transform.position.x) * 0.02f
             : 0;
 
-        yspeed = (Mathf.Abs(transform.position.y - player.transform.position.y) >= 0.4f)
-            ? Mathf.Sign(player.position.y - transform.position.y) * 0.005f
-            : 0;
-        yield return new WaitForSeconds(0.2f);
-        StartCoroutine(Shoot());
+            yspeed = (Mathf.Abs(transform.position.y - player.transform.position.y) >= 0.4f)
+                ? Mathf.Sign(player.position.y - transform.position.y) * 0.015f
+                : 0;
+        }
+        
+        yield return new WaitForSeconds(1f);
+        if (shootRange)
+            StartCoroutine(Shoot());
+        else
+            StartCoroutine(Think());
     }
 
     IEnumerator Shoot()
     {
+        isShooting = true;
+        yspeed = 0f;
         bullet = Managers.Resource.Instantiate("Bullet");
         Managers.Sound.Play("turret_shoot");
         bullet.transform.position = transform.position;
-        float angle = Mathf.Atan2(detected.gameObject.transform.position.y - transform.position.y, 
-            detected.gameObject.transform.position.x - transform.position.x) * Mathf.Rad2Deg;
-        bullet.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        bullet.GetComponent<Bullet>().isEnemy = true;
+        if(xspeed>0)
+            bullet.transform.rotation = Quaternion.AngleAxis(-90, Vector3.forward);
+        else if(xspeed<0)
+            bullet.transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
         yield return new WaitForSeconds(0.5f);
         canTurn = true;
+        isShooting = false;
         StartCoroutine(Think());
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameObject player = collision.gameObject;
-            if (collision.contacts[0].point.y >= rigid.position.y + 0.2f)
-            {
-                player.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
-                Die();
-            }
-            else
-            {
-                player.GetComponent<PlayerStatus>().OnDamaged(status, transform.right*Mathf.Sign(xspeed) * 10f);
-            }
+            collision.GetComponent<PlayerStatus>().OnDamaged(status, transform.right * Mathf.Sign(xspeed) * 10f);
         }
     }
 

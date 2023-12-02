@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bullet : ProjectileStatus
 {
     public NonDamageableEnvStatus turretStatus;
+    public MonsterStatus monsterStatus;
     public bool isEnemy;
     public float angle;
     protected override void OnEnable()
@@ -13,7 +14,7 @@ public class Bullet : ProjectileStatus
     }
     void FixedUpdate()
     {
-        transform.Translate(Vector2.up * 10f * Time.deltaTime);
+        transform.Translate(Vector2.up * 8f * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

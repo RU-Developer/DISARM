@@ -15,7 +15,7 @@ public class PlayerGun : Despawnable
     private float lastAngle = 0;
     //총이 사용 가능한지
     [HideInInspector] public bool canShoot;
-    
+
     private string weapon;
     private PlayerStatus status;
 
@@ -81,7 +81,7 @@ public class PlayerGun : Despawnable
 
         if (Managers.Skill.CanUseSkill("parry"))
         {
-            canShoot = true;
+            
         }
 
         if (attackTime < 0)
@@ -99,13 +99,13 @@ public class PlayerGun : Despawnable
 
     private void Fire()
     {
-
+        Debug.Log(canShoot);
         // 패링 시전 중에는 금지
-        if (Managers.Input.GetInputDown(Define.InputType.Skill2))
+        if (Managers.Input.GetInputDown(Define.InputType.Skill2) || !canShoot)
             return;
 
         // 발사 버튼 눌림
-        if (Managers.Input.GetInputDown(Define.InputType.Attack) && canShoot)
+        if (Managers.Input.GetInputDown(Define.InputType.Attack))
         {
             switch (weapon)
             {
@@ -124,7 +124,7 @@ public class PlayerGun : Despawnable
                     if ((float)Managers.Input.GunAngle >135 && !GetComponent<PlayerController>().isGrounded)
                     {
                         GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
-                        GetComponent<Rigidbody2D>().AddForce(Vector2.up * 4f, ForceMode2D.Impulse);
+                        GetComponent<Rigidbody2D>().AddForce(Vector2.up * 2f, ForceMode2D.Impulse);
                     }
 
                     Managers.Sound.Play("dart_fire");
