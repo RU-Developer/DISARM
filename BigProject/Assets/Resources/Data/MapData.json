@@ -2,27 +2,31 @@
     "maps": [
         {
             "scene": "ResearchScene",
-            "roomIds": [
-                "ResearchScene_Section1",
-                "ResearchScene_Section2",
-                "ResearchScene_Section3",
-                "ResearchScene_Section4",
-                "ResearchScene_Section5",
-                "ResearchScene_Section6",
-                "ResearchScene_Section7",
-                "ResearchScene_Section8",
-                "ResearchScene_Section9"
-            ],
-            "pathIds": [
-                "ResearchScene_Path1",
-                "ResearchScene_Path2",
-                "ResearchScene_Path3",
-                "ResearchScene_Path4",
-                "ResearchScene_Path5",
-                "ResearchScene_Path6",
-                "ResearchScene_Path7",
-                "ResearchScene_Path8"
-            ]
+          "roomIds": [
+            "ResearchScene_Section1",
+            "ResearchScene_Section2",
+            "ResearchScene_Section3",
+            "ResearchScene_Section4",
+            "ResearchScene_Section5",
+            "ResearchScene_Section6",
+            "ResearchScene_Section7",
+            "ResearchScene_Section8",
+            "ResearchScene_Section9",
+            "ResearchScene_Section10",
+            "ResearchScene_Section11"
+          ],
+          "pathIds": [
+            "ResearchScene_Path1",
+            "ResearchScene_Path2",
+            "ResearchScene_Path3",
+            "ResearchScene_Path4",
+            "ResearchScene_Path5",
+            "ResearchScene_Path6",
+            "ResearchScene_Path7",
+            "ResearchScene_Path8",
+            "ResearchScene_Path9",
+            "ResearchScene_Path10"
+          ]
         },
         {
             "scene": "ForestScene",

@@ -34,7 +34,7 @@ public class Dart : MonoBehaviour
         pe = GetComponent<PlatformEffector2D>();
         pe.surfaceArc = 0;
         pe.colliderMask &= ~(1 << LayerMask.NameToLayer("Player"));
-        Managers.Resource.Destroy(gameObject, 10f);
+        Managers.Resource.Destroy(gameObject, 10f, () => Dart.dartNum--);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

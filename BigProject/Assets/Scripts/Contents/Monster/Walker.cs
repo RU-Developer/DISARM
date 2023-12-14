@@ -7,7 +7,7 @@ public class Walker : MonsterController
     Rigidbody2D rigid;
     SpriteRenderer sprite;
     Animator animator;
-    private bool isEnd, isWall, isGrounded, detected,canAttack;
+    private bool isEnd, isWall, isGrounded, detected,canAttack,isAttack;
     private float dir, xspeed;
     private float initMass;
 
@@ -73,7 +73,7 @@ public class Walker : MonsterController
     IEnumerator Move()
     {
         dir = Mathf.Sign(Random.Range(-1, 1));
-        xspeed = 0.05f;
+        xspeed = 0.03f;
         animator.SetBool("isMove", true);
         if (isGrounded && (isWall || isEnd))
         {
@@ -98,13 +98,16 @@ public class Walker : MonsterController
 
     IEnumerator Attack()
     {
-        rigid.AddForce(new Vector2(10f * dir, 0), ForceMode2D.Impulse);
+        xspeed = 0.08f;
+        isAttack = true;
         Managers.Sound.Play("slime_attack");
         yield return new WaitForSeconds(0.5f);
         animator.SetBool("isAttack", false);
         StartCoroutine(Think());
         yield return new WaitForSeconds(2f);
         canAttack = true;
+        isAttack = false;
+        xspeed = 0.03f;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -113,14 +116,15 @@ public class Walker : MonsterController
         {
             GameObject player = collision.gameObject;
             rigid.mass = 100;
-            if (collision.contacts[0].point.y >= rigid.position.y)
+            if (collision.contacts[0].point.y+0.1f >= rigid.position.y)
             {
                 player.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 18f, ForceMode2D.Impulse);
                 status.OnDamaged(player.GetComponent<PlayerStatus>());
             }
             else
             {
-                player.GetComponent<PlayerStatus>().OnDamaged(status, new Vector2(dir * 15f, 0), status.Attack);
+                if (isAttack)
+                    player.GetComponent<PlayerStatus>().OnDamaged(status, new Vector2(dir * 10f, 0), status.Attack);
             }
         }
         else

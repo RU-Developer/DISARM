@@ -1,112 +1,124 @@
 {
-    "rooms": [
-        {
-            "id": "ResearchScene_Section1",
-            "scene": "ResearchScene",
-            "name": "Section1",
-            "visited": false
-        },
-        {
-            "id": "ResearchScene_Section2",
-            "scene": "ResearchScene",
-            "name": "Section2",
-            "visited": true
-        },
-        {
-            "id": "ResearchScene_Section3",
-            "scene": "ResearchScene",
-            "name": "Section3",
-            "visited": true
-        },
-        {
-            "id": "ResearchScene_Section4",
-            "scene": "ResearchScene",
-            "name": "Section4",
-            "visited": true
-        },
-        {
-            "id": "ResearchScene_Section5",
-            "scene": "ResearchScene",
-            "name": "Section5",
-            "visited": false
-        },
-        {
-            "id": "ResearchScene_Section6",
-            "scene": "ResearchScene",
-            "name": "Section6",
-            "visited": true
-        },
-        {
-            "id": "ResearchScene_Section7",
-            "scene": "ResearchScene",
-            "name": "Section7",
-            "visited": true
-        },
-        {
-            "id": "ResearchScene_Section8",
-            "scene": "ResearchScene",
-            "name": "Section8",
-            "visited": false
-        },
-        {
-            "id": "ResearchScene_Section9",
-            "scene": "ResearchScene",
-            "name": "Section9",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section1",
-            "scene": "ForestScene",
-            "name": "Section1",
-            "visited": true
-        },
-        {
-            "id": "ForestScene_Section2",
-            "scene": "ForestScene",
-            "name": "Section2",
-            "visited": true
-        },
-        {
-            "id": "ForestScene_Section3",
-            "scene": "ForestScene",
-            "name": "Section3",
-            "visited": true
-        },
-        {
-            "id": "ForestScene_Section4",
-            "scene": "ForestScene",
-            "name": "Section4",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section5",
-            "scene": "ForestScene",
-            "name": "Section5",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section6",
-            "scene": "ForestScene",
-            "name": "Section6",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section7",
-            "scene": "ForestScene",
-            "name": "Section7",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section8",
-            "scene": "ForestScene",
-            "name": "Section8",
-            "visited": false
-        },
-        {
-            "id": "ForestScene_Section9",
-            "scene": "ForestScene",
-            "name": "Section9",
-            "visited": false
-        }
-    ]
+  "rooms": [
+    {
+      "id": "ResearchScene_Section1",
+      "scene": "ResearchScene",
+      "name": "Section1",
+      "visited": false
+    },
+    {
+      "id": "ResearchScene_Section2",
+      "scene": "ResearchScene",
+      "name": "Section2",
+      "visited": true
+    },
+    {
+      "id": "ResearchScene_Section3",
+      "scene": "ResearchScene",
+      "name": "Section3",
+      "visited": true
+    },
+    {
+      "id": "ResearchScene_Section4",
+      "scene": "ResearchScene",
+      "name": "Section4",
+      "visited": true
+    },
+    {
+      "id": "ResearchScene_Section5",
+      "scene": "ResearchScene",
+      "name": "Section5",
+      "visited": false
+    },
+    {
+      "id": "ResearchScene_Section6",
+      "scene": "ResearchScene",
+      "name": "Section6",
+      "visited": true
+    },
+    {
+      "id": "ResearchScene_Section7",
+      "scene": "ResearchScene",
+      "name": "Section7",
+      "visited": true
+    },
+    {
+      "id": "ResearchScene_Section8",
+      "scene": "ResearchScene",
+      "name": "Section8",
+      "visited": false
+    },
+    {
+      "id": "ResearchScene_Section9",
+      "scene": "ResearchScene",
+      "name": "Section9",
+      "visited": false
+    },
+    {
+      "id": "ResearchScene_Section10",
+      "scene": "ResearchScene",
+      "name": "Section10",
+      "visited": false
+    },
+    {
+      "id": "ResearchScene_Section11",
+      "scene": "ResearchScene",
+      "name": "Section10",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section1",
+      "scene": "ForestScene",
+      "name": "Section1",
+      "visited": true
+    },
+    {
+      "id": "ForestScene_Section2",
+      "scene": "ForestScene",
+      "name": "Section2",
+      "visited": true
+    },
+    {
+      "id": "ForestScene_Section3",
+      "scene": "ForestScene",
+      "name": "Section3",
+      "visited": true
+    },
+    {
+      "id": "ForestScene_Section4",
+      "scene": "ForestScene",
+      "name": "Section4",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section5",
+      "scene": "ForestScene",
+      "name": "Section5",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section6",
+      "scene": "ForestScene",
+      "name": "Section6",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section7",
+      "scene": "ForestScene",
+      "name": "Section7",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section8",
+      "scene": "ForestScene",
+      "name": "Section8",
+      "visited": false
+    },
+    {
+      "id": "ForestScene_Section9",
+      "scene": "ForestScene",
+      "name": "Section9",
+      "visited": false
+    }
+  ]
 }

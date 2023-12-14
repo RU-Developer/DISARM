@@ -1,116 +1,130 @@
 {
-    "paths": [
-        {
-            "id": "ResearchScene_Path1",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section1",
-            "roomId2": "ResearchScene_Section2",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path2",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section2",
-            "roomId2": "ResearchScene_Section3",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path3",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section3",
-            "roomId2": "ResearchScene_Section4",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path4",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section4",
-            "roomId2": "ResearchScene_Section5",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path5",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section4",
-            "roomId2": "ResearchScene_Section6",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path6",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section2",
-            "roomId2": "ResearchScene_Section7",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path7",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section1",
-            "roomId2": "ResearchScene_Section8",
-            "type": "open"
-        },
-        {
-            "id": "ResearchScene_Path8",
-            "scene": "ResearchScene",
-            "roomId1": "ResearchScene_Section8",
-            "roomId2": "ResearchScene_Section9",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path1",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section1",
-            "roomId2": "ForestScene_Section2",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path2",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section2",
-            "roomId2": "ForestScene_Section3",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path3",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section2",
-            "roomId2": "ForestScene_Section4",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path4",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section4",
-            "roomId2": "ForestScene_Section5",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path5",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section5",
-            "roomId2": "ForestScene_Section6",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path6",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section5",
-            "roomId2": "ForestScene_Section7",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path7",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section7",
-            "roomId2": "ForestScene_Section8",
-            "type": "open"
-        },
-        {
-            "id": "ForestScene_Path8",
-            "scene": "ForestScene",
-            "roomId1": "ForestScene_Section5",
-            "roomId2": "ForestScene_Section9",
-            "type": "open"
-        }
-    ]
+  "paths": [
+    {
+      "id": "ResearchScene_Path1",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section1",
+      "roomId2": "ResearchScene_Section2",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path2",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section2",
+      "roomId2": "ResearchScene_Section3",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path3",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section3",
+      "roomId2": "ResearchScene_Section4",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path4",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section4",
+      "roomId2": "ResearchScene_Section5",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path5",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section4",
+      "roomId2": "ResearchScene_Section6",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path6",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section2",
+      "roomId2": "ResearchScene_Section7",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path7",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section1",
+      "roomId2": "ResearchScene_Section8",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path8",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section8",
+      "roomId2": "ResearchScene_Section9",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path9",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section3",
+      "roomId2": "ResearchScene_Section10",
+      "type": "open"
+    },
+    {
+      "id": "ResearchScene_Path10",
+      "scene": "ResearchScene",
+      "roomId1": "ResearchScene_Section10",
+      "roomId2": "ResearchScene_Section11",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path1",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section1",
+      "roomId2": "ForestScene_Section2",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path2",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section2",
+      "roomId2": "ForestScene_Section3",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path3",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section2",
+      "roomId2": "ForestScene_Section4",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path4",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section4",
+      "roomId2": "ForestScene_Section5",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path5",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section5",
+      "roomId2": "ForestScene_Section6",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path6",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section5",
+      "roomId2": "ForestScene_Section7",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path7",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section7",
+      "roomId2": "ForestScene_Section8",
+      "type": "open"
+    },
+    {
+      "id": "ForestScene_Path8",
+      "scene": "ForestScene",
+      "roomId1": "ForestScene_Section5",
+      "roomId2": "ForestScene_Section9",
+      "type": "open"
+    }
+  ]
 }

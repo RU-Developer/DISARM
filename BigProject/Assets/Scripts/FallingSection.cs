@@ -10,7 +10,6 @@ public class FallingSection : MonoBehaviour
     private void OnEnable()
     {
         status = GetComponent<NonDamageableEnvStatus>();
-        this.GetComponent<Tilemap>().color = new Color(0, 0, 0, 0);
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

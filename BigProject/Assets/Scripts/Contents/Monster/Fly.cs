@@ -43,6 +43,15 @@ public class Fly : MonsterController
                 StartCoroutine(TurnY());
             }
         }
+
+        if (xspeed > 0)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = false;
+        }
+        else if (xspeed < 0)
+        {
+            this.gameObject.GetComponent<SpriteRenderer>().flipX = true;
+        }
     }
     IEnumerator TurnX()
     {

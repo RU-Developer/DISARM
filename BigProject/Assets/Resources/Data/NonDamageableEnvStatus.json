@@ -13,7 +13,7 @@
             "attack": 0
         },
         {
-            "id": "Falling",
+          "id": "Deadzone",
             "attack": 20
         }
     ]
