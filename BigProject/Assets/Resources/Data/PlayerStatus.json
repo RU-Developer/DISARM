@@ -10,8 +10,8 @@
         "maxMemory": 100,
         "weapon": "None",
         "scene": "ResearchScene",
-        "x": -4.514728,
-        "y": -12.09876
+        "x": 2.92513,
+        "y": -4.625823
       },
       {
         "id": "saved",
@@ -23,8 +23,8 @@
         "maxMemory": 100,
         "weapon": "None",
         "scene": "ResearchScene",
-        "x": -4.514728,
-        "y": -12.09876
+        "x": 2.92513,
+        "y": -4.625823
       }
     ]
 }
