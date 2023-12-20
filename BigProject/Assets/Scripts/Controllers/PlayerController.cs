@@ -308,7 +308,7 @@ public class PlayerController : BaseController
             scale = 1f;
 
 
-        if ((isWallRight || isWallLeft) && rigid.velocity.y < 0)
+        if ((isWallRight || isWallLeft))
         {
             isWallJump = false;
             if (Managers.Input.GetInputDown(Define.InputType.Jump) && !fixFlip)
