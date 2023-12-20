@@ -14,7 +14,7 @@
             "scene": "ForestScene",
             "x": -89.44486999511719,
             "y": 0.983890950679779,
-            "consume": true
+            "consume": false
         },
         {
             "id": "Twins",
@@ -30,7 +30,7 @@
             "scene": "ResearchScene",
             "x": -4.934869289398193,
             "y": 5.983891010284424,
-            "consume": true
+            "consume": false
         },
         {
             "id": "GrabLedge",
@@ -38,7 +38,7 @@
             "scene": "ForestScene",
             "x": -7.574869632720947,
             "y": -5.1861090660095219,
-            "consume": true
+            "consume": false
         },
         {
             "id": "Parry",
@@ -54,7 +54,7 @@
             "scene": "ForestScene",
             "x": 19.760000228881837,
             "y": 11.720000267028809,
-            "consume": true
+            "consume": false
         },
         {
             "id": "DartGun",
@@ -62,7 +62,7 @@
             "scene": "ResearchScene",
             "x": -6.274869441986084,
             "y": -3.6161088943481447,
-            "consume": true
+            "consume": false
         }
     ]
 }
