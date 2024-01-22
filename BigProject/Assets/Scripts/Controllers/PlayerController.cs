@@ -38,7 +38,7 @@ public class PlayerController : BaseController
 
 
     //여러 기능과 관련된 조건 : 외부에서 현재 dive중인지 파악을 위해 사용함
-    [HideInInspector]public bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,
+    [HideInInspector]public bool isLedge, isWallFront, isWallRight, isWallLeft, isWallUp, isSlope, canGrabLedge = true, canClimbLedge,isHang=false,
         isWallJump = false, isRoll = false, fixFlip = false;
     public bool isGrounded{ private set; get; }
 
@@ -61,6 +61,7 @@ public class PlayerController : BaseController
         //점프,벽 점프,구르기 크기
         jumpForce = 14;
         isGrounded = false;
+        isWallJump = false;
 
         //절벽 확인하는 gameObject저장
         ledgeCheck = gameObject.FindChild<Transform>("ledgeCheck");
@@ -96,12 +97,32 @@ public class PlayerController : BaseController
         Move();
         Jump();
         WallJump();
+        Hold();
 
         //마우스 이벤트 + 키보드 이벤트
         Roll();
         Flip();
     }
 
+    void Hold()
+    {
+        if (canClimbLedge || isRoll || isSlope || isFix) return;
+
+        if (animator.GetBool("isHang") && animator.GetBool("isFall"))
+        {
+            playerGun.canShoot = false;
+            leftArm.SetActive(false);
+            rightArm.SetActive(false);
+            head.SetActive(false);
+        }
+        if (isGrounded || !animator.GetBool("isHang") || animator.GetBool("isJump"))
+        {
+            playerGun.canShoot = true;
+            leftArm.SetActive(true);
+            rightArm.SetActive(true);
+            head.SetActive(true);
+        }
+    }
     void Look()
     {
         //플레이어의 위,아래를 봤을 때 특정 animation을 동작시키는 코드
@@ -193,7 +214,7 @@ public class PlayerController : BaseController
     {
         //move
 
-        if (isWallJump || canClimbLedge || isRoll || isSlope || isFix || isSlope || fixFlip)
+        if (isWallJump || canClimbLedge || isRoll || isSlope || isFix ||  fixFlip)
             return;
 
         //horizontal값을 이동 관련 변수로 사용
@@ -296,8 +317,7 @@ public class PlayerController : BaseController
         if (!Managers.Data.MapItemDict["WallJump"].consume)
             return;
 
-        if (isRoll || isFix ) return;
-
+        if (isRoll) return;
         //플레이어 옆에 벽이 있고, 땅 위에 있으며 플레이어가 하강 중일 때 벽 점프
         //벽 점프시 어느 정도의 관성이 주어져서 한 벽만 탈 수는 없다.
         float scale = 0f;
@@ -310,24 +330,21 @@ public class PlayerController : BaseController
 
         if ((isWallRight || isWallLeft))
         {
-            isWallJump = false;
-            if (Managers.Input.GetInputDown(Define.InputType.Jump) && !fixFlip)
+            if (Managers.Input.GetInputDown(Define.InputType.Jump))
             {
-                fixFlip = true;
                 if (!isWallJump && !isGrounded && horizontal != 0)
                 {
                     isWallJump = true;
                     rigid.velocity = Vector2.zero;
-                    StartCoroutine(forceX(scale* 0.1f, 0.35f));
+                    StartCoroutine(wallJumpX(scale* 0.1f, 0.35f));
                     rigid.velocity = new Vector2(rigid.velocity.x, jumpForce * 0.5f);
 
                     Managers.Sound.Play("player_jump");
                     Debug.Log("wall jump");
                 }
             }
-            
+
         }
-        
     }
 
 
@@ -355,7 +372,7 @@ public class PlayerController : BaseController
 
             rigid.velocity = Vector2.zero;
             rigid.AddForce(Vector2.up * jumpForce * 0.4f, ForceMode2D.Impulse);
-            StartCoroutine(forceX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * 0.15f, 0.6f));
+            StartCoroutine(rollX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * 0.15f, 0.6f));
 
             leftArm.SetActive(false);
             rightArm.SetActive(false);
@@ -368,7 +385,7 @@ public class PlayerController : BaseController
         {
             xspeed = 0;
             rigid.velocity = Vector2.zero;
-            StartCoroutine(forceX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * -0.04f, 0.6f));
+            StartCoroutine(rollX(Mathf.Sign((int)Managers.Input.CurrentMoveDir) * -0.04f, 0.6f));
         }
         if (isRoll && isGrounded) animator.speed = 1;
     }
@@ -388,7 +405,7 @@ public class PlayerController : BaseController
         fixFlip = false;
     }
 
-    IEnumerator forceX(float forceX = 0f, float time = 0.1f)
+    IEnumerator wallJumpX(float forceX = 0f, float time = 0.1f)
     {
         //특정 상황에서 한 쪽으로 힘을 주기 위한 메소드
         fixFlip = true;
@@ -401,6 +418,18 @@ public class PlayerController : BaseController
         isWallJump = false;
     }
 
+    IEnumerator rollX(float forceX = 0f, float time = 0.1f)
+    {
+        //특정 상황에서 한 쪽으로 힘을 주기 위한 메소드
+        fixFlip = true;
+        transform.localScale = new Vector3(Mathf.Sign(forceX), transform.localScale.y, transform.localScale.z);
+
+        Debug.Log("forceX=" + forceX + ": localScale=" + transform.localScale.x);
+        xspeed = forceX;
+        yield return new WaitForSeconds(time);
+        fixFlip = false;
+    }
+
     void FixedUpdate()
     {
         //몇몇 조건들을 위한 레이케스트가 있음.
@@ -410,8 +439,8 @@ public class PlayerController : BaseController
         isLedge = !Physics2D.Raycast(ledgeCheck.position, Vector2.right*Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, groundMask) && !isWallUp &&
             Physics2D.Raycast(new Vector2(ledgeCheck.position.x, ledgeCheck.position.y - 0.2f), Vector2.right * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0.5f, platformMask);
         isWallFront = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), new Vector2(Mathf.Sign((int)Managers.Input.CurrentMoveDir), 0), 0.4f, platformMask);
-        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.6f, platformMask);
-        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.6f, platformMask);
+        isWallRight = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.right, 0.8f, platformMask);
+        isWallLeft = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - 0.1f), Vector2.left, 0.8f, platformMask);
         isWallUp = Physics2D.Raycast(transform.position, Vector2.up, 0.8f, groundMask);
         isSlope = Physics2D.Raycast(transform.position, Vector2.down, 1f, slopeMask);
 
@@ -440,6 +469,19 @@ public class PlayerController : BaseController
             animator.SetBool("isJump", false);
         }
 
+        if(rigid.velocity.y<0)
+        {
+            if((isWallRight && Managers.Input.GetInput(Define.InputType.Right))||
+                (isWallLeft && Managers.Input.GetInput(Define.InputType.Left)))
+            {
+                rigid.AddForce(Vector2.up * 0.4f, ForceMode2D.Impulse);
+                animator.SetBool("isHang", true);
+            }
+            else
+            {
+                animator.SetBool("isHang", false);
+            }
+        }
 
     }
 

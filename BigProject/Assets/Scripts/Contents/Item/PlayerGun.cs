@@ -13,8 +13,10 @@ public class PlayerGun : Despawnable
     [HideInInspector] public bool canShoot;
     private bool canParry;
 
+    private float dir;
     private string weapon;
     private PlayerStatus status;
+    private PlayerController player;
 
     public void Init()
     {
@@ -28,6 +30,7 @@ public class PlayerGun : Despawnable
         rightArm = gameObject.FindChild("rightArm");
 
         status = GetComponent<PlayerStatus>();
+        player = GetComponent<PlayerController>();
         weapon = status.Weapon;
         status.AddWeaponChangedAction(OnWeaponChanged);
         Debug.Log($"PlayerGun Init {weapon}");
@@ -46,11 +49,12 @@ public class PlayerGun : Despawnable
 
     private void FixedUpdate()
     {
+        dir = Mathf.Sign((int)Managers.Input.CurrentMoveDir);
         leftArm.transform.rotation = 
-            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 
+            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * dir, 
             Vector3.forward * Time.deltaTime);
         rightArm.transform.rotation = 
-            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * Mathf.Sign((int)Managers.Input.CurrentMoveDir), 
+            Quaternion.AngleAxis((90 - (float)Managers.Input.GunAngle) * dir, 
             Vector3.forward * Time.deltaTime);
     }
     private void Melee()
